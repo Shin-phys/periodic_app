@@ -6,7 +6,6 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PERIODIC SPEEDRUN v2.0</title>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -119,6 +118,7 @@
             color: #fff;
             text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
             animation: flutter 3s infinite alternate;
+            transition: font-size 0.3s;
         }
 
         @keyframes flutter {
@@ -319,20 +319,27 @@
             transition: width 0.3s;
         }
 
+        /* ----- Layout Fix: Grid for Status Row ----- */
         .status-row {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr; /* Left, Center, Right */
             align-items: center;
+            justify-items: center;
+            width: 100%;
         }
 
         .timer-display {
+            justify-self: start; /* Left align */
             font-family: var(--font-display);
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #fff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            font-variant-numeric: tabular-nums; /* Fixed width numbers */
+            min-width: 150px; /* Prevent shake */
         }
 
         .top-btn {
+            justify-self: center; /* Center align */
             background: none;
             border: 1px solid #444;
             color: #888;
@@ -352,10 +359,14 @@
         }
 
         .question-display {
+            justify-self: end; /* Right align */
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            justify-content: flex-end;
+            min-width: 100px;
         }
+        /* ------------------------------------------- */
 
         .q-text {
             font-family: var(--font-jp);
@@ -368,34 +379,31 @@
         /* Atom Visualizer */
         .atom-visual {
             position: relative;
-            width: 80px;
-            height: 80px;
-            /* Larger */
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .proton-group {
-            width: 60px;
-            height: 60px;
+            width: 100%;
+            height: 100%;
             position: relative;
         }
 
         .proton {
             position: absolute;
-            width: 14px;
-            height: 14px;
+            width: 10px;
+            height: 10px;
             background: radial-gradient(circle at 30% 30%, #ff5555, #cc0000);
             border-radius: 50%;
             border: 1px solid #ffaaaa;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 3px rgba(255, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: #fff;
+            font-size: 0; /* Hide text for small icons */
             z-index: 2;
         }
 
@@ -718,29 +726,38 @@
         .utility-hidden {
             display: none !important;
         }
-        /* スマホ向けの調整 */
-@media (max-width: 600px) {
-    h1.title-logo {
-        font-size: 2.2rem;   /* 3.5remからサイズダウン */
-        margin-bottom: 1.2rem; /* 下の余白も少し詰める */
-    }
-    
-    .version {
-        font-size: 0.8rem;   /* バージョン表記も少し小さく */
-        letter-spacing: 1px;
-    }
 
-    .menu-container {
-        padding: 20px;       /* パネル内の余白を少し削ってボタンを押しやすく */
-        gap: 16px;           /* 要素間の隙間を詰める */
-    }
-}
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 600px) {
+            h1.title-logo {
+                font-size: 2.2rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .version {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+
+            .menu-container {
+                padding: 20px;
+                gap: 16px;
+            }
+            
+            .timer-display {
+                font-size: 1.8rem;
+                min-width: 110px;
+            }
+
+            .q-text {
+                font-size: 1.6rem;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <!-- Start Screen -->
         <section id="start-screen" class="screen active">
             <h1 class="title-logo">Periodic<br>Time Trial<span class="version">v2.0</span></h1>
 
@@ -777,7 +794,6 @@
             </div>
         </section>
 
-        <!-- Game Screen -->
         <section id="game-screen" class="screen">
             <div class="hud-container">
                 <div class="progress-track">
@@ -795,31 +811,25 @@
                 </div>
             </div>
 
-            <!-- Selector Input -->
             <div id="pan-select" class="input-container">
                 <div class="input-view active">
                     <div class="periodic-grid">
-                        <!-- Row 1 -->
                         <button class="el-btn" data-n="1">H</button><button class="el-btn" data-n="2">He</button>
-                        <!-- Row 2 -->
                         <button class="el-btn" data-n="3">Li</button><button class="el-btn"
                             data-n="4">Be</button><button class="el-btn" data-n="5">B</button><button class="el-btn"
                             data-n="6">C</button><button class="el-btn" data-n="7">N</button><button class="el-btn"
                             data-n="8">O</button><button class="el-btn" data-n="9">F</button><button class="el-btn"
                             data-n="10">Ne</button>
-                        <!-- Row 3 -->
                         <button class="el-btn" data-n="11">Na</button><button class="el-btn"
                             data-n="12">Mg</button><button class="el-btn" data-n="13">Al</button><button class="el-btn"
                             data-n="14">Si</button><button class="el-btn" data-n="15">P</button><button class="el-btn"
                             data-n="16">S</button><button class="el-btn" data-n="17">Cl</button><button class="el-btn"
                             data-n="18">Ar</button>
-                        <!-- Row 4 -->
                         <button class="el-btn" data-n="19">K</button><button class="el-btn" data-n="20">Ca</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Write Input -->
             <div id="pan-write" class="input-container utility-hidden">
                 <div class="input-view active">
                     <div class="canvas-wrapper">
@@ -838,7 +848,6 @@
             <div id="feedback" class="feedback-overlay"></div>
         </section>
 
-        <!-- Result Screen -->
         <section id="result-screen" class="screen">
             <div class="glass-panel menu-container" style="align-items:center; text-align:center;">
                 <h2
@@ -1002,12 +1011,12 @@ function renderProtons(count) {
         const p = document.createElement('div');
         p.className = 'proton';
         p.textContent = '+';
-        // Simple random cluster placement within 60x60 area
-        const r = 20; // radius of cluster
+        // Simple random cluster placement within 50x50 area
+        const r = 18; // radius of cluster
         const angle = Math.random() * Math.PI * 2;
         const dist = Math.sqrt(Math.random()) * r;
-        const x = 30 + Math.cos(angle) * dist - 7; // center offset
-        const y = 30 + Math.sin(angle) * dist - 7;
+        const x = 25 + Math.cos(angle) * dist - 5; // center offset
+        const y = 25 + Math.sin(angle) * dist - 5;
         p.style.left = `${x}px`;
         p.style.top = `${y}px`;
         DOM.game.protons.appendChild(p);
