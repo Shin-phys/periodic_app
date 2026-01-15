@@ -1,0 +1,482 @@
+:root {
+    --bg-color: #0d0d0d;
+    --text-color: #ffffff;
+    --accent-color: #00ff9d;
+    /* Neon Green */
+    --accent-secondary: #ff00ff;
+    /* Neon Magenta */
+    --accent-tertiary: #00ffff;
+    /* Cyan */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --font-main: 'Inter', sans-serif;
+    --font-jp: 'Noto Sans JP', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    /* Prevent scrolling */
+    height: 100vh;
+    width: 100vw;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Start Screen */
+.title-logo {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px var(--accent-color);
+    letter-spacing: -2px;
+}
+
+.version {
+    font-size: 1rem;
+    color: var(--accent-tertiary);
+    letter-spacing: normal;
+}
+
+.menu-container {
+    width: 100%;
+    max-width: 400px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.radio-group {
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 4px;
+    justify-content: space-evenly;
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-group label {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.radio-group input[type="radio"]:checked+label {
+    background: var(--accent-color);
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.main-btn {
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    padding: 15px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.main-btn:active {
+    transform: scale(0.98);
+}
+
+.best-time {
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.2rem;
+    color: var(--accent-tertiary);
+}
+
+/* Game Screen */
+#game-screen {
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.hud {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    position: relative;
+    z-index: 10;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent-secondary);
+    box-shadow: 0 0 10px var(--accent-secondary);
+    transition: width 0.2s;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timer {
+    font-family: monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-tertiary);
+}
+
+.question-info {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.q-label {
+    color: #888;
+    font-size: 1rem;
+}
+
+.q-content {
+    color: #fff;
+    font-family: var(--font-jp);
+}
+
+.atom-view {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nucleus {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #ff5555, #990000);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px #ff0000;
+    z-index: 2;
+}
+
+/* Pseudo-electrons for decoration */
+.atom-view::before,
+.atom-view::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 20px;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbit 2s linear infinite;
+}
+
+.atom-view::after {
+    width: 20px;
+    height: 60px;
+    animation: orbit-reverse 3s linear infinite;
+}
+
+@keyframes orbit {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes orbit-reverse {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Input Areas */
+.input-area {
+    width: 100%;
+    flex: 1;
+    display: none;
+    /* Active one will be 'flex' */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.input-area.active {
+    display: flex;
+}
+
+/* Compact Periodic Grid Custom Layout */
+.periodic-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    /* Compact 8 columns for 1-20 */
+    gap: 6px;
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 8 / 4;
+    /* preserve grid ratio */
+}
+
+/* 
+Custom Mapping for 8-column layout logic in pure CSS/HTML placement
+or just use simple rows.
+Row 1: H (1), He (8)
+Row 2: Li (1)..Ne (8)
+Row 3: Na (1)..Ar (8)
+Row 4: K (1), Ca (2)
+*/
+
+.element-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s;
+    user-select: none;
+}
+
+.element-btn:active {
+    background: var(--accent-color);
+    color: #000;
+    transform: scale(0.95);
+}
+
+/* Grid Positioning for 1-20 compact view */
+/* We will trick the grid to look like a mini periodic table */
+/* Or simply flow them? The user requested "Compact Periodic Table" */
+/* 
+1段目：H, (空), (空), He -> If 8 cols: H(1).......He(8)
+2段目：Li..Ne (8 items) -> Li(1)..Ne(8)
+3段目：Na..Ar (8 items) -> Na(1)..Ar(8)
+4段目：K, Ca -> K(1), Ca(2)
+*/
+
+/* H */
+.element-btn[data-n="1"] {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+/* He */
+.element-btn[data-n="2"] {
+    grid-column: 8;
+    grid-row: 1;
+}
+
+/* Li-Ne row 2 */
+/* Automatic flow works if we don't force positions, but let's be explicit or use spacers */
+/* Actually, the HTML already has a spacer for row 1.
+   Let's adjust HTML spacer to be span 6 (8-2=6).
+*/
+
+/* Canvas */
+.canvas-container {
+    width: 90%;
+    aspect-ratio: 1;
+    max-height: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    position: relative;
+    touch-action: none;
+    /* Critical for drawing */
+}
+
+#write-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.canvas-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#recognition-preview {
+    font-family: monospace;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0 10px;
+    border-radius: 4px;
+    line-height: 40px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.emergency-keyboard {
+    margin-top: 10px;
+}
+
+/* Feedback Overlay */
+.feedback-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    font-weight: 900;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+
+.feedback-overlay.correct {
+    box-shadow: inset 0 0 50px var(--accent-color);
+}
+
+.feedback-overlay.incorrect {
+    box-shadow: inset 0 0 50px #ff0055;
+    animation: shake 0.3s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+/* Result Screen */
+.result-time {
+    font-family: monospace;
+    font-size: 4rem;
+    color: var(--accent-color);
+    text-shadow: 0 0 20px var(--accent-color);
+}
