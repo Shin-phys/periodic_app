@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PERIODIC SPEEDRUN v2.0</title>
+    <title>PERIODIC SPEEDRUN v2.2</title>
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,11 +19,15 @@
     <style>
         :root {
             --bg-dark: #050510;
-            --bg-panel: rgba(20, 20, 30, 0.7);
+            --bg-panel: rgba(20, 20, 30, 0.85);
             --neon-blue: #00f3ff;
             --neon-pink: #ff00ff;
             --neon-green: #00ff9d;
             --neon-yellow: #faff00;
+            --nucleus-color: #ff3366;
+            --neutron-color: #dddddd;
+            --electron-color: #00f3ff;
+            --shell-color: rgba(0, 243, 255, 0.3);
             --glass-border: 1px solid rgba(255, 255, 255, 0.1);
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
             --font-display: 'Audiowide', 'Inter', sans-serif;
@@ -66,9 +71,6 @@
             width: 100%;
             height: 100%;
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         /* Glows/Ambience */
@@ -79,7 +81,7 @@
             left: 50%;
             width: 150vw;
             height: 150vw;
-            background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.08) 0%, transparent 60%);
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 0;
@@ -110,15 +112,14 @@
         /* Typography */
         h1.title-logo {
             font-family: var(--font-display);
-            font-size: 3.5rem;
+            font-size: 3rem;
             text-align: center;
             line-height: 1.1;
             margin-bottom: 2rem;
             text-transform: uppercase;
             color: #fff;
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
             animation: flutter 3s infinite alternate;
-            transition: font-size 0.3s;
         }
 
         @keyframes flutter {
@@ -126,22 +127,21 @@
             0%,
             100% {
                 opacity: 1;
-                text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+                text-shadow: 0 0 10px var(--neon-blue);
             }
 
             50% {
                 opacity: 0.9;
-                text-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
+                text-shadow: 0 0 20px var(--neon-blue);
             }
         }
 
         .version {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--neon-pink);
             display: block;
             margin-top: 5px;
             letter-spacing: 2px;
-            text-shadow: 0 0 5px var(--neon-pink);
         }
 
         /* Menu Panel */
@@ -157,10 +157,10 @@
         .menu-container {
             width: 100%;
             max-width: 400px;
-            padding: 30px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
             position: relative;
             overflow: hidden;
         }
@@ -189,7 +189,7 @@
         .control-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--neon-blue);
             font-family: var(--font-display);
             text-transform: uppercase;
@@ -211,38 +211,36 @@
         .cyber-radio-group label {
             flex: 1;
             margin: 0;
-            padding: 12px;
+            padding: 10px 4px;
             text-align: center;
             cursor: pointer;
             border-radius: 6px;
             color: #888;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .cyber-radio-group input:checked+label {
             background: rgba(0, 243, 255, 0.2);
             color: #fff;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            text-shadow: 0 0 5px var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
             border: 1px solid rgba(0, 243, 255, 0.5);
         }
 
         #input-write:checked+label {
             background: rgba(255, 0, 255, 0.2);
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
-            text-shadow: 0 0 5px var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
             border: 1px solid rgba(255, 0, 255, 0.5);
         }
 
-        /* Checkbox for Temptation Mode */
         .option-check {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: rgba(0, 0, 0, 0.3);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
@@ -251,98 +249,148 @@
         .option-check span {
             font-weight: bold;
             color: #ccc;
+            font-size: 0.9rem;
         }
 
         .option-check input {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             accent-color: var(--neon-yellow);
-        }
-
-        .option-check:hover {
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .start-btn {
             background: linear-gradient(135deg, var(--neon-green), #00a86b);
             color: #000;
             font-family: var(--font-display);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             border: none;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
         }
 
         .start-btn:active {
             transform: scale(0.98);
         }
 
-        /* Game Screen */
+        /* Game Screen Layout */
         #game-screen {
-            justify-content: flex-start;
-            padding: 0;
-            padding-bottom: 20px;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
-        }
-
-        .hud-container {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            z-index: 100;
+            padding: 0;
+            background: radial-gradient(circle at center, #11111f 0%, #000000 100%);
         }
 
-        .progress-track {
+        /* Top Area: Visualizer (35-40%) */
+        .visual-area {
+            flex: 4;
             width: 100%;
-            height: 6px;
-            background: #222;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-            box-shadow: 0 0 10px var(--neon-blue);
-            transition: width 0.3s;
-        }
-
-        /* ----- Layout Fix: Grid for Status Row ----- */
-        .status-row {
-            display: grid;
-            grid-template-columns: 1fr 60px 1fr; /* Left, Center, Right */
+            position: relative;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            justify-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .atom-container {
+            width: 320px;
+            height: 320px;
+            position: relative;
+        }
+
+        /* Bohr Model */
+        .bohr-shell {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border: 1px solid var(--shell-color);
+            transform: translate(-50%, -50%);
+        }
+
+        .electron {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--electron-color);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--electron-color);
+            margin-left: -4px;
+            margin-top: -4px;
+        }
+
+        .nucleus-group {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .particle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .proton {
+            background: var(--nucleus-color);
+            z-index: 2;
+            text-shadow: 0 0 2px #000;
+        }
+
+        .neutron {
+            background: var(--neutron-color);
+            z-index: 1;
+        }
+
+        /* HUD Overlay on Visual Area */
+        .hud-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .hud-overlay>* {
+            pointer-events: auto;
         }
 
         .timer-display {
-            justify-self: start; /* Left align */
             font-family: var(--font-display);
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            font-variant-numeric: tabular-nums; /* Fixed width numbers */
-            min-width: 150px; /* Prevent shake */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         .top-btn {
-            justify-self: center; /* Center align */
-            background: none;
-            border: 1px solid #444;
-            color: #888;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #555;
+            color: #ccc;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -350,68 +398,71 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: all 0.2s;
+            backdrop-filter: blur(4px);
         }
 
-        .top-btn:active {
-            background: #333;
-            color: #fff;
+        .progress-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .question-display {
-            justify-self: end; /* Right align */
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: flex-end;
-            min-width: 100px;
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            transition: width 0.3s;
         }
-        /* ------------------------------------------- */
+
+        /* Question Text Overlay */
+        .q-overlay {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+        }
 
         .q-text {
             font-family: var(--font-jp);
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 900;
             color: #fff;
             text-shadow: 0 0 15px var(--neon-green);
         }
 
-        /* Atom Visualizer */
-        .atom-visual {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Ion Label inside Nucleus */
+        .ion-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
-        .proton-group {
+        /* Bottom Area: Input (60-65%) */
+        .input-area {
+            flex: 6;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .input-container {
             width: 100%;
             height: 100%;
-            position: relative;
-        }
-
-        .proton {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: radial-gradient(circle at 30% 30%, #ff5555, #cc0000);
-            border-radius: 50%;
-            border: 1px solid #ffaaaa;
-            box-shadow: 0 0 3px rgba(255, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0; /* Hide text for small icons */
-            z-index: 2;
-        }
-
-        /* Inputs */
-        .input-container {
-            flex: 1;
-            width: 100%;
-            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -425,174 +476,151 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
         }
 
         .input-view.active {
             display: flex;
+            animation: slideUp 0.3s ease;
         }
 
-        @keyframes fadeIn {
+        @keyframes slideUp {
             from {
+                transform: translateY(20px);
                 opacity: 0;
-                transform: translateY(10px);
             }
 
             to {
-                opacity: 1;
                 transform: translateY(0);
+                opacity: 1;
             }
         }
 
+        /* Grid */
         .periodic-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            gap: 6px;
+            gap: 4px;
             width: 100%;
-            max-width: 600px;
-            aspect-ratio: 1.8;
+            max-width: 500px;
         }
 
         .el-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            color: #ddd;
-            font-family: var(--font-main);
+            border-radius: 4px;
+            color: #eee;
+            font-family: var(--font-display);
             font-weight: 700;
             font-size: 1.1rem;
             cursor: pointer;
+            aspect-ratio: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.1s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .el-btn:active {
-            transform: scale(0.92);
             background: var(--neon-blue);
             color: #000;
-            box-shadow: 0 0 20px var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
             border-color: #fff;
-            z-index: 10;
         }
 
-        /* Layout 1-20 */
+        /* Layout */
         .el-btn[data-n="1"] {
             grid-column: 1;
-            grid-row: 1;
             border-color: #ff0055;
         }
 
         .el-btn[data-n="2"] {
             grid-column: 8;
-            grid-row: 1;
             border-color: #00f3ff;
         }
 
         .el-btn[data-n="3"] {
             grid-column: 1;
-            grid-row: 2;
         }
 
         .el-btn[data-n="4"] {
             grid-column: 2;
-            grid-row: 2;
         }
 
         .el-btn[data-n="5"] {
             grid-column: 3;
-            grid-row: 2;
         }
 
         .el-btn[data-n="6"] {
             grid-column: 4;
-            grid-row: 2;
         }
 
         .el-btn[data-n="7"] {
             grid-column: 5;
-            grid-row: 2;
         }
 
         .el-btn[data-n="8"] {
             grid-column: 6;
-            grid-row: 2;
         }
 
         .el-btn[data-n="9"] {
             grid-column: 7;
-            grid-row: 2;
         }
 
         .el-btn[data-n="10"] {
             grid-column: 8;
-            grid-row: 2;
             border-color: #00f3ff;
         }
 
         .el-btn[data-n="11"] {
             grid-column: 1;
-            grid-row: 3;
         }
 
         .el-btn[data-n="12"] {
             grid-column: 2;
-            grid-row: 3;
         }
 
         .el-btn[data-n="13"] {
             grid-column: 3;
-            grid-row: 3;
         }
 
         .el-btn[data-n="14"] {
             grid-column: 4;
-            grid-row: 3;
         }
 
         .el-btn[data-n="15"] {
             grid-column: 5;
-            grid-row: 3;
         }
 
         .el-btn[data-n="16"] {
             grid-column: 6;
-            grid-row: 3;
         }
 
         .el-btn[data-n="17"] {
             grid-column: 7;
-            grid-row: 3;
         }
 
         .el-btn[data-n="18"] {
             grid-column: 8;
-            grid-row: 3;
             border-color: #00f3ff;
         }
 
         .el-btn[data-n="19"] {
             grid-column: 1;
-            grid-row: 4;
         }
 
         .el-btn[data-n="20"] {
             grid-column: 2;
-            grid-row: 4;
         }
 
         /* Canvas */
         .canvas-wrapper {
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
             aspect-ratio: 1;
             background: rgba(0, 0, 0, 0.5);
             border: 2px dashed var(--neon-blue);
             border-radius: 12px;
             position: relative;
-            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
         }
 
         canvas {
@@ -612,6 +640,7 @@
             padding: 4px 12px;
             border-radius: 12px;
             pointer-events: none;
+            font-family: monospace;
         }
 
         .canvas-toolbar {
@@ -639,8 +668,6 @@
             flex-wrap: wrap;
             gap: 6px;
             justify-content: center;
-            width: 100%;
-            max-width: 400px;
         }
 
         .kb-key {
@@ -652,17 +679,47 @@
             font-weight: bold;
         }
 
-        .kb-icon {
-            margin-top: 10px;
-            background: none;
-            border: 1px solid #555;
-            color: #888;
-            padding: 6px 12px;
-            border-radius: 20px;
+        /* Ion Choice Panel */
+        .ion-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+        }
+
+        .ion-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            height: 100px;
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 1.8rem;
+            font-weight: bold;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
             display: flex;
-            gap: 5px;
+            justify-content: center;
             align-items: center;
+        }
+
+        .ion-btn sup {
+            font-size: 1rem;
+            margin-left: 2px;
+            color: var(--neon-yellow);
+        }
+
+        .ion-btn:active {
+            background: var(--neon-blue);
+            color: #000;
+            border-color: #fff;
+        }
+
+        .ion-btn:active sup {
+            color: #000;
         }
 
         /* Feedback */
@@ -681,7 +738,6 @@
             font-weight: 900;
             font-size: 5rem;
             opacity: 0;
-            transition: opacity 0.2s;
         }
 
         .feedback-overlay.correct {
@@ -692,7 +748,6 @@
         }
 
         .feedback-overlay.tempt-style {
-            /* Used for both Miss and Temptation */
             color: var(--neon-yellow);
             text-shadow: 0 0 20px var(--neon-yellow);
             font-size: 4rem;
@@ -726,51 +781,27 @@
         .utility-hidden {
             display: none !important;
         }
-
-        /* Mobile Responsive Adjustments */
-        @media (max-width: 600px) {
-            h1.title-logo {
-                font-size: 2.2rem;
-                margin-bottom: 1.2rem;
-            }
-
-            .version {
-                font-size: 0.8rem;
-                letter-spacing: 1px;
-            }
-
-            .menu-container {
-                padding: 20px;
-                gap: 16px;
-            }
-            
-            .timer-display {
-                font-size: 1.8rem;
-                min-width: 110px;
-            }
-
-            .q-text {
-                font-size: 1.6rem;
-            }
-        }
     </style>
 </head>
 
 <body>
     <div id="app">
+        <!-- Start Screen -->
         <section id="start-screen" class="screen active">
-            <h1 class="title-logo">Periodic<br>Time Trial<span class="version">v2.0</span></h1>
+            <h1 class="title-logo">Periodic<br>Speedrun<span class="version">v2.2</span></h1>
 
             <div class="glass-panel menu-container">
                 <div class="control-group">
                     <label>Quiz Mode</label>
                     <div class="cyber-radio-group">
                         <input type="radio" name="mode" id="m-name" value="name" checked>
-                        <label for="m-name">元素名</label>
+                        <label for="m-name">名</label>
                         <input type="radio" name="mode" id="m-sym" value="symbol">
                         <label for="m-sym">記号</label>
                         <input type="radio" name="mode" id="m-atom" value="atom">
-                        <label for="m-atom">原子核</label>
+                        <label for="m-atom">原子</label>
+                        <input type="radio" name="mode" id="m-ion" value="ion">
+                        <label for="m-ion">イオン</label>
                     </div>
                 </div>
 
@@ -790,71 +821,97 @@
                 </label>
 
                 <button id="btn-start" class="start-btn">GAME START</button>
-                <div class="best-time">BEST: <span id="val-best">--:--.--</span></div>
+                <div style="text-align:center; color:#888;">BEST: <span id="val-best"
+                        style="color:var(--neon-yellow);">--:--.--</span></div>
             </div>
         </section>
 
+        <!-- Game Screen -->
         <section id="game-screen" class="screen">
-            <div class="hud-container">
+            <!-- Visual Area (Top) -->
+            <div class="visual-area">
                 <div class="progress-track">
                     <div id="bar-progress" class="progress-bar"></div>
                 </div>
-                <div class="status-row">
+                <div class="hud-overlay">
                     <div class="timer-display" id="timer-val">00:00.00</div>
                     <button id="btn-home" class="top-btn"><span class="material-symbols-outlined">home</span></button>
-                    <div class="question-display">
-                        <div id="atom-visualizer" class="atom-visual utility-hidden">
-                            <div class="proton-group" id="atom-protons"></div>
-                        </div>
-                        <div id="q-text" class="q-text">H</div>
-                    </div>
+                </div>
+
+                <div class="atom-container" id="atom-view">
+                    <!-- Bohr Model inserted here -->
+                </div>
+
+                <div class="q-overlay">
+                    <div id="q-text" class="q-text">Hydrogen</div>
                 </div>
             </div>
 
-            <div id="pan-select" class="input-container">
-                <div class="input-view active">
-                    <div class="periodic-grid">
-                        <button class="el-btn" data-n="1">H</button><button class="el-btn" data-n="2">He</button>
-                        <button class="el-btn" data-n="3">Li</button><button class="el-btn"
-                            data-n="4">Be</button><button class="el-btn" data-n="5">B</button><button class="el-btn"
-                            data-n="6">C</button><button class="el-btn" data-n="7">N</button><button class="el-btn"
-                            data-n="8">O</button><button class="el-btn" data-n="9">F</button><button class="el-btn"
-                            data-n="10">Ne</button>
-                        <button class="el-btn" data-n="11">Na</button><button class="el-btn"
-                            data-n="12">Mg</button><button class="el-btn" data-n="13">Al</button><button class="el-btn"
-                            data-n="14">Si</button><button class="el-btn" data-n="15">P</button><button class="el-btn"
-                            data-n="16">S</button><button class="el-btn" data-n="17">Cl</button><button class="el-btn"
-                            data-n="18">Ar</button>
-                        <button class="el-btn" data-n="19">K</button><button class="el-btn" data-n="20">Ca</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Input Area (Bottom) -->
+            <div class="input-area">
 
-            <div id="pan-write" class="input-container utility-hidden">
-                <div class="input-view active">
-                    <div class="canvas-wrapper">
-                        <canvas id="cv-write"></canvas>
-                        <div class="canvas-toolbar">
-                            <button id="btn-clear"><span class="material-symbols-outlined">delete</span></button>
+                <!-- 1. Periodic Grid (Numbers Only) -->
+                <div id="pan-select" class="input-container">
+                    <div class="input-view active">
+                        <div class="periodic-grid">
+                            <!-- Row 1 -->
+                            <button class="el-btn" data-n="1">1</button><button class="el-btn" data-n="2">2</button>
+                            <!-- Row 2 -->
+                            <button class="el-btn" data-n="3">3</button><button class="el-btn"
+                                data-n="4">4</button><button class="el-btn" data-n="5">5</button><button class="el-btn"
+                                data-n="6">6</button><button class="el-btn" data-n="7">7</button><button class="el-btn"
+                                data-n="8">8</button><button class="el-btn" data-n="9">9</button><button class="el-btn"
+                                data-n="10">10</button>
+                            <!-- Row 3 -->
+                            <button class="el-btn" data-n="11">11</button><button class="el-btn"
+                                data-n="12">12</button><button class="el-btn" data-n="13">13</button><button
+                                class="el-btn" data-n="14">14</button><button class="el-btn"
+                                data-n="15">15</button><button class="el-btn" data-n="16">16</button><button
+                                class="el-btn" data-n="17">17</button><button class="el-btn" data-n="18">18</button>
+                            <!-- Row 4 -->
+                            <button class="el-btn" data-n="19">19</button><button class="el-btn" data-n="20">20</button>
                         </div>
-                        <div id="ocr-res" class="ocr-status">...</div>
                     </div>
-                    <button id="btn-kb-toggle" class="kb-icon"><span class="material-symbols-outlined">keyboard</span>
-                        KEYBOARD</button>
-                    <div id="kb-panel" class="kb-panel utility-hidden"></div>
                 </div>
+
+                <!-- 2. Handwriting -->
+                <div id="pan-write" class="input-container utility-hidden">
+                    <div class="input-view active">
+                        <div class="canvas-wrapper">
+                            <canvas id="cv-write"></canvas>
+                            <div class="canvas-toolbar">
+                                <button id="btn-clear"><span class="material-symbols-outlined">delete</span></button>
+                            </div>
+                            <div id="ocr-res" class="ocr-status">...</div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <button id="btn-kb-toggle"
+                                style="background:none; border:1px solid #555; color:#aaa; padding:5px 10px; border-radius:15px; cursor:pointer;">KYBD</button>
+                        </div>
+                        <div id="kb-panel" class="kb-panel utility-hidden"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Ion Choices -->
+                <div id="pan-ion" class="input-container utility-hidden">
+                    <div class="input-view active">
+                        <div id="ion-choices" class="ion-choices"></div>
+                    </div>
+                </div>
+
             </div>
 
             <div id="feedback" class="feedback-overlay"></div>
         </section>
 
+        <!-- Result Screen -->
         <section id="result-screen" class="screen">
             <div class="glass-panel menu-container" style="align-items:center; text-align:center;">
                 <h2
                     style="font-family:var(--font-display); font-size:3rem; margin:0; text-shadow:0 0 20px var(--neon-blue);">
                     RESULT</h2>
                 <div id="res-time"
-                    style="font-family:var(--font-display); font-size:4rem; color:var(--neon-green); margin:20px 0; text-shadow:0 0 30px var(--neon-green);">
+                    style="font-family:var(--font-display); font-size:4rem; color:var(--neon-green); margin:20px 0;">
                     00:00.00</div>
                 <div id="miss-section">
                     <p style="color:#aaa;">MISSES</p>
@@ -868,276 +925,193 @@
     </div>
 
     <script>
-/**
- * PERIODIC SPEEDRUN v2.0
- */
-const ELEMENTS = [
-    { n: 1, s: 'H', ja: '水素' }, { n: 2, s: 'He', ja: 'ヘリウム' },
-    { n: 3, s: 'Li', ja: 'リチウム' }, { n: 4, s: 'Be', ja: 'ベリリウム' }, { n: 5, s: 'B', ja: 'ホウ素' },
-    { n: 6, s: 'C', ja: '炭素' }, { n: 7, s: 'N', ja: '窒素' }, { n: 8, s: 'O', ja: '酸素' },
-    { n: 9, s: 'F', ja: 'フッ素' }, { n: 10, s: 'Ne', ja: 'ネオン' },
-    { n: 11, s: 'Na', ja: 'ナトリウム' }, { n: 12, s: 'Mg', ja: 'マグネシウム' }, { n: 13, s: 'Al', ja: 'アルミニウム' },
-    { n: 14, s: 'Si', ja: 'ケイ素' }, { n: 15, s: 'P', ja: 'リン' }, { n: 16, s: 'S', ja: '硫黄' },
-    { n: 17, s: 'Cl', ja: '塩素' }, { n: 18, s: 'Ar', ja: 'アルゴン' },
-    { n: 19, s: 'K', ja: 'カリウム' }, { n: 20, s: 'Ca', ja: 'カルシウム' }
-];
+        /**
+         * PERIODIC SPEEDRUN v2.2
+         */
+        const DATA = [
+            { n: 1, s: 'H', ja: '水素', ion: 'H⁺', chg: 1 },
+            { n: 2, s: 'He', ja: 'ヘリウム', ion: null },
+            { n: 3, s: 'Li', ja: 'リチウム', ion: 'Li⁺', chg: 1 },
+            { n: 4, s: 'Be', ja: 'ベリリウム', ion: 'Be²⁺', chg: 2 },
+            { n: 5, s: 'B', ja: 'ホウ素', ion: null },
+            { n: 6, s: 'C', ja: '炭素', ion: null },
+            { n: 7, s: 'N', ja: '窒素', ion: 'N³⁻', chg: -3 },
+            { n: 8, s: 'O', ja: '酸素', ion: 'O²⁻', chg: -2 },
+            { n: 9, s: 'F', ja: 'フッ素', ion: 'F⁻', chg: -1 },
+            { n: 10, s: 'Ne', ja: 'ネオン', ion: null },
+            { n: 11, s: 'Na', ja: 'ナトリウム', ion: 'Na⁺', chg: 1 },
+            { n: 12, s: 'Mg', ja: 'マグネシウム', ion: 'Mg²⁺', chg: 2 },
+            { n: 13, s: 'Al', ja: 'アルミニウム', ion: 'Al³⁺', chg: 3 },
+            { n: 14, s: 'Si', ja: 'ケイ素', ion: null },
+            { n: 15, s: 'P', ja: 'リン', ion: 'P³⁻', chg: -3 },
+            { n: 16, s: 'S', ja: '硫黄', ion: 'S²⁻', chg: -2 },
+            { n: 17, s: 'Cl', ja: '塩素', ion: 'Cl⁻', chg: -1 },
+            { n: 18, s: 'Ar', ja: 'アルゴン', ion: null },
+            { n: 19, s: 'K', ja: 'カリウム', ion: 'K⁺', chg: 1 },
+            { n: 20, s: 'Ca', ja: 'カルシウム', ion: 'Ca²⁺', chg: 2 }
+        ];
 
-const state = {
-    screen: 'start', mode: 'name', input: 'select',
-    temptOption: false, // User setting
-    playing: false, startTime: 0, timeDisplay: '00:00.00',
-    queue: [], qIndex: 0, misses: new Set(),
-    temptValid: true, temptTriggered: false
-};
+        const state = {
+            screen: 'start', mode: 'name', input: 'select',
+            temptOption: false,
+            playing: false, startTime: 0, timeDisplay: '00:00.00',
+            queue: [], qIndex: 0, misses: new Set(),
+            temptValid: true, temptTriggered: false
+        };
 
-const DOM = {
-    screens: { start: document.getElementById('start-screen'), game: document.getElementById('game-screen'), result: document.getElementById('result-screen') },
-    start: { btn: document.getElementById('btn-start'), best: document.getElementById('val-best'), temptChk: document.getElementById('chk-tempt') },
-    game: {
-        bar: document.getElementById('bar-progress'), timer: document.getElementById('timer-val'), home: document.getElementById('btn-home'),
-        qText: document.getElementById('q-text'), atomView: document.getElementById('atom-visualizer'), protons: document.getElementById('atom-protons'),
-        panSel: document.getElementById('pan-select'), panWrite: document.getElementById('pan-write'), feedback: document.getElementById('feedback'),
-        btns: document.querySelectorAll('.el-btn'), canvas: document.getElementById('cv-write'), ocr: document.getElementById('ocr-res'),
-        kbToggle: document.getElementById('btn-kb-toggle'), kbPanel: document.getElementById('kb-panel')
-    },
-    result: { time: document.getElementById('res-time'), misses: document.getElementById('miss-list'), retry: document.getElementById('btn-retry') }
-};
+        const DOM = {
+            screens: { start: document.getElementById('start-screen'), game: document.getElementById('game-screen'), result: document.getElementById('result-screen') },
+            start: { btn: document.getElementById('btn-start'), best: document.getElementById('val-best'), temptChk: document.getElementById('chk-tempt') },
+            game: {
+                bar: document.getElementById('bar-progress'), timer: document.getElementById('timer-val'), home: document.getElementById('btn-home'),
+                qOverlay: document.querySelector('.q-overlay'), qText: document.getElementById('q-text'), atomView: document.getElementById('atom-view'),
+                panSel: document.getElementById('pan-select'), panWrite: document.getElementById('pan-write'), panIon: document.getElementById('pan-ion'),
+                ionChoices: document.getElementById('ion-choices'),
+                btnGrid: document.querySelectorAll('.el-btn'),
+                feedback: document.getElementById('feedback'),
+                canvas: document.getElementById('cv-write'), ocr: document.getElementById('ocr-res'),
+                kbToggle: document.getElementById('btn-kb-toggle'), kbPanel: document.getElementById('kb-panel')
+            },
+            result: { time: document.getElementById('res-time'), misses: document.getElementById('miss-list'), retry: document.getElementById('btn-retry') }
+        };
 
-// Audio
-const audio = {
-    ctx: null,
-    init: () => { if(!audio.ctx) audio.ctx = new (window.AudioContext || window.webkitAudioContext)(); audio.ctx.resume(); },
-    play: (type) => {
-        if(!audio.ctx) return;
-        const t = audio.ctx.currentTime;
-        const osc = audio.ctx.createOscillator();
-        const gain = audio.ctx.createGain();
-        osc.connect(gain); gain.connect(audio.ctx.destination);
-        
-        if (type === 'good') {
-            osc.frequency.setValueAtTime(880, t); 
-            osc.frequency.exponentialRampToValueAtTime(1760, t+0.1);
-            gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.01, t+0.3);
-            osc.start(t); osc.stop(t+0.3);
-        } else if (type === 'tempt') { // Used for Error & Tempt
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(300, t);
-            osc.frequency.linearRampToValueAtTime(350, t+0.1);
-            gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.01, t+0.2);
-            osc.start(t); osc.stop(t+0.2);
-        }
-    }
-};
+        // Audio
+        const audio = {
+            ctx: null,
+            init: () => { if (!audio.ctx) audio.ctx = new (window.AudioContext || window.webkitAudioContext)(); audio.ctx.resume(); },
+            play: (type) => {
+                if (!audio.ctx) return;
+                const t = audio.ctx.currentTime;
+                const osc = audio.ctx.createOscillator();
+                const gain = audio.ctx.createGain();
+                osc.connect(gain); gain.connect(audio.ctx.destination);
+                if (type === 'good') {
+                    osc.frequency.setValueAtTime(880, t); osc.frequency.exponentialRampToValueAtTime(1760, t + 0.1);
+                    gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+                    osc.start(t); osc.stop(t + 0.3);
+                } else {
+                    osc.type = 'square'; osc.frequency.setValueAtTime(300, t); osc.frequency.linearRampToValueAtTime(350, t + 0.1);
+                    gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+                    osc.start(t); osc.stop(t + 0.2);
+                }
+            }
+        };
 
-const shuffle = (arr) => { for(let i=arr.length-1; i>0; i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i], arr[j]]=[arr[j], arr[i]]; } return arr; };
+        const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
 
-function init() {
-    const best = localStorage.getItem('period_best');
-    if(best) DOM.start.best.textContent = best;
-    
-    DOM.start.btn.addEventListener('click', startGame);
-    DOM.result.retry.addEventListener('click', () => switchScreen('start'));
-    DOM.game.home.addEventListener('click', () => { state.playing=false; switchScreen('start'); });
-    
-    DOM.game.btns.forEach(btn => {
-        btn.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput(parseInt(btn.dataset.n)); });
-    });
-    
-    // Canvas
-    initCanvas();
-    DOM.game.kbToggle.addEventListener('click', () => {
-        DOM.game.kbPanel.classList.toggle('utility-hidden');
-        if(!DOM.game.kbPanel.hasChildNodes()) {
-            ELEMENTS.forEach(e => {
-                const btn = document.createElement('button'); btn.className='kb-key'; btn.textContent=e.s;
-                btn.onclick = () => handleInput(e.n); DOM.game.kbPanel.appendChild(btn);
+        function init() {
+            const best = localStorage.getItem('period_best');
+            if (best) DOM.start.best.textContent = best;
+
+            DOM.start.btn.addEventListener('click', startGame);
+            DOM.result.retry.addEventListener('click', () => switchScreen('start'));
+            DOM.game.home.addEventListener('click', () => { state.playing = false; switchScreen('start'); });
+
+            // Grid Events
+            DOM.game.btnGrid.forEach(btn => {
+                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput(parseInt(btn.dataset.n)); });
+            });
+
+            // Canvas
+            initCanvas();
+            DOM.game.kbToggle.addEventListener('click', () => {
+                DOM.game.kbPanel.classList.toggle('utility-hidden');
+                if (!DOM.game.kbPanel.hasChildNodes()) {
+                    DATA.forEach(e => {
+                        const btn = document.createElement('button'); btn.className = 'kb-key'; btn.textContent = e.s;
+                        btn.onclick = () => handleInput(e.n); DOM.game.kbPanel.appendChild(btn);
+                    });
+                }
             });
         }
-    });
-}
 
-function switchScreen(name) {
-    Object.values(DOM.screens).forEach(el => el.classList.remove('active'));
-    DOM.screens[name].classList.add('active');
-    state.screen = name;
-}
-
-function startGame() {
-    audio.init();
-    state.mode = document.querySelector('input[name="mode"]:checked').value;
-    state.input = document.querySelector('input[name="input"]:checked').value;
-    state.temptOption = DOM.start.temptChk.checked;
-    
-    DOM.game.panSel.classList.toggle('utility-hidden', state.input !== 'select');
-    DOM.game.panWrite.classList.toggle('utility-hidden', state.input !== 'write');
-    DOM.game.bar.style.width = '0%';
-    
-    state.queue = shuffle([...Array(20).keys()]);
-    state.qIndex = 0;
-    state.misses.clear();
-    state.playing = true;
-    state.startTime = performance.now();
-    state.temptValid = true;
-    
-    switchScreen('game');
-    nextQuestion();
-    requestAnimationFrame(loop);
-}
-
-function nextQuestion() {
-    if (state.qIndex >= 20) { endGame(); return; }
-    const idx = state.queue[state.qIndex];
-    const el = ELEMENTS[idx];
-    
-    DOM.game.atomView.classList.add('utility-hidden');
-    if (state.mode === 'name') DOM.game.qText.textContent = el.ja;
-    else if (state.mode === 'symbol') DOM.game.qText.textContent = el.s;
-    else if (state.mode === 'atom') {
-        DOM.game.qText.textContent = "?";
-        DOM.game.atomView.classList.remove('utility-hidden');
-        renderProtons(el.n);
-    }
-    
-    DOM.game.bar.style.width = `${(state.qIndex/20)*100}%`;
-    state.temptValid = true; 
-    state.temptTriggered = false;
-    clearCanvas();
-}
-
-function renderProtons(count) {
-    DOM.game.protons.innerHTML = '';
-    // Draw circles clustered
-    for(let i=0; i<count; i++) {
-        const p = document.createElement('div');
-        p.className = 'proton';
-        p.textContent = '+';
-        // Simple random cluster placement within 50x50 area
-        const r = 18; // radius of cluster
-        const angle = Math.random() * Math.PI * 2;
-        const dist = Math.sqrt(Math.random()) * r;
-        const x = 25 + Math.cos(angle) * dist - 5; // center offset
-        const y = 25 + Math.sin(angle) * dist - 5;
-        p.style.left = `${x}px`;
-        p.style.top = `${y}px`;
-        DOM.game.protons.appendChild(p);
-    }
-}
-
-function handleInput(inputN, fromOCR=false) {
-    if (!state.playing) return;
-    const currentElIndex = state.queue[state.qIndex];
-    const correctN = ELEMENTS[currentElIndex].n;
-
-    if (inputN === correctN) {
-        // Temptation Logic: Only if Mode enabled
-        if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
-             audio.play('tempt');
-             showFeedback('tempt'); // 'Really?'
-             state.temptTriggered = true;
-             return;
+        function switchScreen(name) {
+            Object.values(DOM.screens).forEach(el => el.classList.remove('active'));
+            DOM.screens[name].classList.add('active');
+            state.screen = name;
         }
-        audio.play('good');
-        showFeedback('correct'); // 'GOOD'
-        state.qIndex++;
-        setTimeout(nextQuestion, 400);
-    } else {
-        // Incorrect
-        audio.play('tempt'); // Unified sound
-        showFeedback('tempt'); // Unified 'Really?' Visual
-        state.misses.add(ELEMENTS[currentElIndex].s);
-        state.temptValid = false; // Don't tempt after fail
-    }
-    if(fromOCR) clearCanvas();
-}
 
-function showFeedback(type) {
-    const el = DOM.game.feedback;
-    if(type==='correct') {
-        el.className = 'feedback-overlay correct';
-        el.textContent = 'GOOD';
-    } else {
-        // For both error and tempt
-        el.className = 'feedback-overlay tempt-style';
-        el.textContent = '本当に？';
-    }
-    el.style.opacity = 1;
-    void el.offsetWidth; 
-    setTimeout(() => { el.style.opacity = 0; }, 500);
-}
+        function startGame() {
+            audio.init();
+            state.mode = document.querySelector('input[name="mode"]:checked').value;
+            state.input = document.querySelector('input[name="input"]:checked').value;
+            state.temptOption = DOM.start.temptChk.checked;
 
-function endGame() {
-    state.playing = false;
-    DOM.result.time.textContent = state.timeDisplay;
-    const old = localStorage.getItem('period_best');
-    if(!old || state.timeDisplay < old) {
-        localStorage.setItem('period_best', state.timeDisplay);
-        DOM.start.best.textContent = state.timeDisplay;
-    }
-    DOM.result.misses.innerHTML = '';
-    if (state.misses.size === 0) DOM.result.misses.innerHTML = '<li style="color:var(--neon-green)">PERFECT!</li>';
-    else state.misses.forEach(m => { const li = document.createElement('li'); li.textContent = m; DOM.result.misses.appendChild(li); });
-    setTimeout(() => switchScreen('result'), 500);
-}
+            // Filter queue for Ion mode
+            if (state.mode === 'ion') {
+                state.queue = shuffle(DATA.filter(d => d.ion !== null).map(d => DATA.indexOf(d)));
+                DOM.game.panSel.classList.add('utility-hidden');
+                DOM.game.panWrite.classList.add('utility-hidden');
+                DOM.game.panIon.classList.remove('utility-hidden');
+            } else {
+                state.queue = shuffle([...Array(20).keys()]);
+                DOM.game.panSel.classList.toggle('utility-hidden', state.input !== 'select');
+                DOM.game.panWrite.classList.toggle('utility-hidden', state.input !== 'write');
+                DOM.game.panIon.classList.add('utility-hidden');
+            }
 
-function loop() {
-    if(state.playing) {
-        const now = performance.now();
-        const diff = now - state.startTime;
-        const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000); const ms = Math.floor((diff%1000)/10);
-        state.timeDisplay = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(2,'0')}`;
-        DOM.game.timer.textContent = state.timeDisplay;
-        requestAnimationFrame(loop);
-    }
-}
+            state.qIndex = 0;
+            state.misses.clear();
+            state.playing = true;
+            state.startTime = performance.now();
+            state.temptValid = true;
 
-// Canvas
-let cvState = { drawing:false, x:0, y:0, timer:null };
-const ctx = DOM.game.canvas.getContext('2d');
-let wrk = null;
+            switchScreen('game');
+            nextQuestion();
+            requestAnimationFrame(loop);
+        }
 
-function initCanvas() {
-    const cv = DOM.game.canvas;
-    const obs = new ResizeObserver((entries) => {
-        const r = entries[0].contentRect; cv.width = r.width; cv.height = r.height;
-        ctx.strokeStyle = '#00ff9d'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    });
-    obs.observe(cv.parentElement);
-    
-    const start = (e) => { e.preventDefault(); cvState.drawing=true; const r=cv.getBoundingClientRect(); cvState.x=e.clientX-r.left; cvState.y=e.clientY-r.top; clearTimeout(cvState.timer); };
-    const move = (e) => {
-        if(!cvState.drawing) return; e.preventDefault();
-        const r=cv.getBoundingClientRect(); const x=e.clientX-r.left; const y=e.clientY-r.top;
-        ctx.beginPath(); ctx.moveTo(cvState.x, cvState.y); ctx.lineTo(x, y); ctx.stroke();
-        cvState.x=x; cvState.y=y;
-    };
-    const end = () => { if(cvState.drawing) { cvState.drawing=false; cvState.timer=setTimeout(recognize, 600); } };
-    
-    cv.addEventListener('pointerdown', start); cv.addEventListener('pointermove', move);
-    cv.addEventListener('pointerup', end); cv.addEventListener('pointerout', end);
-    document.getElementById('btn-clear').addEventListener('click', clearCanvas);
-    initOCR();
-}
+        function nextQuestion() {
+            if (state.qIndex >= state.queue.length) { endGame(); return; }
+            const idx = state.queue[state.qIndex];
+            const el = DATA[idx];
 
-function clearCanvas() { ctx.clearRect(0,0, DOM.game.canvas.width, DOM.game.canvas.height); DOM.game.ocr.textContent = '...'; }
-async function initOCR() {
-    if(wrk) return;
-    try { wrk = await Tesseract.createWorker('eng'); await wrk.setParameters({ tessedit_char_whitelist: 'HheLiBeBCNOFNeNaMgAlSiPSClArKCa' }); } catch(e){}
-}
-async function recognize() {
-    if(!wrk) { DOM.game.ocr.textContent="Init.."; await initOCR(); }
-    DOM.game.ocr.textContent="Read..";
-    try {
-        const {data} = await wrk.recognize(DOM.game.canvas);
-        let txt = data.text.trim().replace(/[^a-zA-Z]/g,'');
-        if(txt.length===1) txt=txt.toUpperCase(); else if(txt.length>=2) txt=txt[0].toUpperCase()+txt[1].toLowerCase();
-        DOM.game.ocr.textContent = txt||"?";
-        const m = ELEMENTS.find(e=>e.s===txt); if(m) handleInput(m.n, true);
-    } catch(e) { DOM.game.ocr.textContent="Err"; }
-}
+            // Reset Visuals
+            DOM.game.atomView.innerHTML = '';
+            DOM.game.qOverlay.classList.remove('utility-hidden');
 
-init();
+            // Modes
+            if (state.mode === 'name') {
+                DOM.game.qText.textContent = el.ja;
+                renderBohr(el.n, el.n, false); // Atom view decoration
+            } else if (state.mode === 'symbol') {
+                DOM.game.qText.textContent = el.s;
+                renderBohr(el.n, el.n, false);
+            } else if (state.mode === 'atom') {
+                DOM.game.qText.textContent = "?";
+                renderBohr(el.n, el.n, false);
+            } else if (state.mode === 'ion') {
+                DOM.game.qOverlay.classList.add('utility-hidden');
+                // Ion Mode: Show Ion configuration (Nucleus + Ion Electrons)
+                // Electrons = AtomicNum - Charge. ex: Na(11) -> Na+(10e)
+                const eCount = el.n - el.chg;
+                renderBohr(el.n, eCount, true);
+                generateIonChoices(el);
+            }
 
-    </script>
-</body>
+            DOM.game.bar.style.width = `${(state.qIndex / state.queue.length) * 100}%`;
+            state.temptValid = true;
+            state.temptTriggered = false;
+            clearCanvas();
+        }
 
-</html>
+        /**
+         * Bohr Model Render
+         * @param {number} Z Atomic Num (Protons) - Nucleus Size
+         * @param {number} eCount Electron Count
+         * @param {boolean} isIon Show +Z in Nucleus?
+         */
+        function renderBohr(Z, eCount, isIon) {
+            const cont = DOM.game.atomView;
+            const size = 320;
+            const center = size / 2;
+
+            // 1. Electron Shells (K=2, L=8, M=8)
+            const shells = [];
+            if (eCount > 0) shells.push({ r: 60, cap: 2, count: 0 });
+            if (eCount > 2) shells.push({ r: 90, cap: 8, count: 0 });
+            if (eCount > 10) shells.push({ r: 120, cap: 8, count: 0 });
+            if (eCount > 18) shells.push({ r: 150, cap: 2, count: 0 }); // N shell usually 2 for Ca
+
+            let eRem = eCount;
+       
