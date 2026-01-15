@@ -1225,7 +1225,7 @@
 
             if (inputN === correctN) {
                 // Success Logic
-                if (state.input === 'select' && (state.mode === 'name' || state.mode === 'symbol')) {
+                if (state.input === 'select' && (state.mode === 'name' || state.mode === 'symbol' || state.mode === 'atom')) {
                     // Progressive Grid Update
                     const btn = document.querySelector(`.el-btn[data-n="${inputN}"]`);
                     if (btn) {
