@@ -1114,4 +1114,202 @@
             if (eCount > 18) shells.push({ r: 150, cap: 2, count: 0 }); // N shell usually 2 for Ca
 
             let eRem = eCount;
-       
+            shells.forEach(sh => {
+                const n = Math.min(sh.cap, eRem);
+                sh.count = n;
+                eRem -= n;
+
+                // Draw Shell
+                const ring = document.createElement('div');
+                ring.className = 'bohr-shell';
+                ring.style.width = ring.style.height = `${sh.r * 2}px`;
+                cont.appendChild(ring);
+
+                // Draw Electrons
+                for (let i = 0; i < n; i++) {
+                    const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+                    const el = document.createElement('div');
+                    el.className = 'electron';
+                    el.style.left = `${center + Math.cos(angle) * sh.r}px`;
+                    el.style.top = `${center + Math.sin(angle) * sh.r}px`;
+                    cont.appendChild(el);
+                }
+            });
+
+            // 2. Nucleus (Cluster)
+            const nuc = document.createElement('div');
+            nuc.className = 'nucleus-group';
+
+            if (isIon) {
+                // Ion Mode: Just text "+Z"
+                const lbl = document.createElement('div');
+                lbl.className = 'ion-label';
+                lbl.textContent = `+${Z}`;
+                nuc.appendChild(lbl);
+            } else {
+                // Standard Mode: Particles
+                // Protons (Z) + Neutrons (Approx Z or mass-Z, simplfied to Z for visuals)
+                const N = Z; // Simplification
+                const total = Z + N;
+                const radius = Math.sqrt(total) * 6; // approximate cluster radius
+
+                for (let i = 0; i < total; i++) {
+                    const isProton = i < Z;
+                    const p = document.createElement('div');
+                    p.className = `particle ${isProton ? 'proton' : 'neutron'}`;
+                    if (isProton) p.textContent = '+';
+
+                    // Random packing
+                    const r = Math.pow(Math.random(), 0.5) * radius * 0.8;
+                    const th = Math.random() * 2 * Math.PI;
+                    const x = r * Math.cos(th);
+                    const y = r * Math.sin(th);
+
+                    p.style.transform = `translate(${x}px, ${y}px)`;
+                    nuc.appendChild(p);
+                }
+            }
+            cont.appendChild(nuc);
+        }
+
+        function generateIonChoices(correctEl) {
+            const list = DOM.game.ionChoices;
+            list.innerHTML = '';
+
+            // Options
+            const opts = [];
+            opts.push(formatIon(correctEl)); // 1. Correct
+
+            // 2. Wrong Charge (Same el, different charge)
+            // Try to make logic plausible (e.g. Na2+, Cl2-, or sign flip)
+            let fake1 = { ...correctEl };
+            if (Math.random() < 0.5) fake1.chg *= -1; // Flip sign
+            else fake1.chg += (fake1.chg > 0 ? 1 : -1); // Increase mag
+            opts.push(formatIon(fake1));
+
+            // 3. Isoelectronic (Different el, same e count) or Neighbor
+            // e.g. for Na+(10e), use Mg2+(10e) OR Ne(10e) OR F-(10e)
+            // Find neighbor in DATA
+            const neighbor = DATA.find(d => d.n !== correctEl.n && d.ion !== null);
+            if (neighbor) opts.push(formatIon(neighbor));
+
+            // 4. Random other
+            const random = DATA.find(d => d !== correctEl && d !== neighbor && d.ion !== null);
+            if (random) opts.push(formatIon(random));
+
+            // If not enough unique (small chance), fill with randoms
+            while (opts.length < 4) {
+                opts.push(`X${Math.floor(Math.random() * 9)}<sup>+</sup>`);
+            }
+
+            shuffle(opts).forEach(html => {
+                const btn = document.createElement('button');
+                btn.className = 'ion-btn';
+                btn.innerHTML = html;
+                // Check correctness by text content matching
+                btn.onclick = () => handleIonInput(html, formatIon(correctEl));
+                list.appendChild(btn);
+            });
+        }
+
+        function formatIon(el) {
+            // el can be full object or modified copy. needs .s and .chg
+            const mag = Math.abs(el.chg);
+            const sign = el.chg > 0 ? '+' : '-';
+            // Format: Na⁺, Mg²⁺
+            let sup = (mag > 1 ? mag : '') + sign;
+            return `${el.s}<sup>${sup}</sup>`;
+        }
+
+        function handleIonInput(selectionHtml, correctHtml) {
+            if (!state.playing) return;
+            if (selectionHtml === correctHtml) {
+                success();
+            } else {
+                fail(DATA[state.queue[state.qIndex]].s + " (Ion)");
+            }
+        }
+
+        function handleInput(inputN, fromOCR = false) {
+            if (!state.playing) return;
+            const currentElIndex = state.queue[state.qIndex];
+            const correctN = DATA[currentElIndex].n;
+
+            if (inputN === correctN) success();
+            else fail(DATA[currentElIndex].s);
+
+            if (fromOCR) clearCanvas();
+        }
+
+        function success() {
+            // Temptation
+            if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
+                audio.play('tempt'); showFeedback('tempt'); state.temptTriggered = true; return;
+            }
+            audio.play('good'); showFeedback('correct');
+            state.qIndex++; setTimeout(nextQuestion, 400);
+        }
+
+        function fail(label) {
+            audio.play('tempt'); showFeedback('tempt');
+            state.misses.add(label); state.temptValid = false;
+        }
+
+        function showFeedback(type) {
+            const el = DOM.game.feedback;
+            el.className = type === 'correct' ? 'feedback-overlay correct' : 'feedback-overlay tempt-style';
+            el.textContent = type === 'correct' ? 'GOOD' : '本当に？';
+            el.style.opacity = 1; void el.offsetWidth; setTimeout(() => { el.style.opacity = 0; }, 500);
+        }
+
+        function endGame() {
+            state.playing = false;
+            DOM.result.time.textContent = state.timeDisplay;
+            const old = localStorage.getItem('period_best');
+            if (!old || state.timeDisplay < old) { localStorage.setItem('period_best', state.timeDisplay); DOM.start.best.textContent = state.timeDisplay; }
+
+            DOM.result.misses.innerHTML = '';
+            if (state.misses.size === 0) DOM.result.misses.innerHTML = '<li style="color:var(--neon-green)">PERFECT!</li>';
+            else state.misses.forEach(m => { const li = document.createElement('li'); li.textContent = m; DOM.result.misses.appendChild(li); });
+            setTimeout(() => switchScreen('result'), 500);
+        }
+
+        function loop() {
+            if (state.playing) {
+                const now = performance.now();
+                const diff = now - state.startTime;
+                const m = Math.floor(diff / 60000); const s = Math.floor((diff % 60000) / 1000); const ms = Math.floor((diff % 1000) / 10);
+                state.timeDisplay = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+                DOM.game.timer.textContent = state.timeDisplay;
+                requestAnimationFrame(loop);
+            }
+        }
+
+        // Canvas
+        let cvState = { drawing: false, x: 0, y: 0, timer: null };
+        const ctx = DOM.game.canvas.getContext('2d');
+        let wrk = null;
+
+        function initCanvas() {
+            const cv = DOM.game.canvas;
+            const obs = new ResizeObserver((entries) => {
+                const r = entries[0].contentRect; cv.width = r.width; cv.height = r.height;
+                ctx.strokeStyle = '#00ff9d'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            });
+            obs.observe(cv.parentElement);
+            const start = (e) => { e.preventDefault(); cvState.drawing = true; const r = cv.getBoundingClientRect(); cvState.x = e.clientX - r.left; cvState.y = e.clientY - r.top; clearTimeout(cvState.timer); };
+            const move = (e) => { if (!cvState.drawing) return; e.preventDefault(); const r = cv.getBoundingClientRect(); const x = e.clientX - r.left; const y = e.clientY - r.top; ctx.beginPath(); ctx.moveTo(cvState.x, cvState.y); ctx.lineTo(x, y); ctx.stroke(); cvState.x = x; cvState.y = y; };
+            const end = () => { if (cvState.drawing) { cvState.drawing = false; cvState.timer = setTimeout(recognize, 800); } }; // 0.8s
+            cv.addEventListener('pointerdown', start); cv.addEventListener('pointermove', move); cv.addEventListener('pointerup', end); cv.addEventListener('pointerout', end);
+            document.getElementById('btn-clear').addEventListener('click', clearCanvas);
+            initOCR();
+        }
+        function clearCanvas() { ctx.clearRect(0, 0, DOM.game.canvas.width, DOM.game.canvas.height); DOM.game.ocr.textContent = '...'; }
+        async function initOCR() { if (wrk) return; try { wrk = await Tesseract.createWorker('eng'); await wrk.setParameters({ tessedit_char_whitelist: 'HheLiBeBCNOFNeNaMgAlSiPSClArKCa' }); } catch (e) { } }
+        async function recognize() { if (!wrk) { DOM.game.ocr.textContent = "Init.."; await initOCR(); } DOM.game.ocr.textContent = "Read.."; try { const { data } = await wrk.recognize(DOM.game.canvas); let txt = data.text.trim().replace(/[^a-zA-Z]/g, ''); if (txt.length === 1) txt = txt.toUpperCase(); else if (txt.length >= 2) txt = txt[0].toUpperCase() + txt[1].toLowerCase(); DOM.game.ocr.textContent = txt || "?"; const m = DATA.find(e => e.s === txt); if (m) handleInput(m.n, true); } catch (e) { DOM.game.ocr.textContent = "Err"; } }
+
+        init();
+    </script>
+</body>
+
+</html>
