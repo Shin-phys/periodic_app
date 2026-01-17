@@ -1044,7 +1044,8 @@
 
             // Reset Grid Texts (Progressive)
             DOM.game.btnGrid.forEach(btn => {
-                btn.textContent = btn.dataset.n; // 1-20
+                const elData = DATA.find(item => item.n === parseInt(btn.dataset.n, 10));
+                btn.textContent = state.mode === 'atom' && elData ? elData.s : btn.dataset.n; // 1-20 or symbol
                 btn.style.color = '#eee';
             });
 
