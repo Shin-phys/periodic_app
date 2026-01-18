@@ -306,6 +306,24 @@
             transition: opacity 0.3s;
         }
 
+       .atom-container.is-large {
+            width: 380px;
+            height: 380px;
+        }
+
+        .atom-container.is-large .electron {
+            width: 10px;
+            height: 10px;
+            margin-left: -5px;
+            margin-top: -5px;
+        }
+
+        .atom-container.is-large .particle {
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+        }
+
         /* Bohr Model */
         .bohr-shell {
             position: absolute;
@@ -1042,6 +1060,8 @@
             state.input = document.querySelector('input[name="input"]:checked').value;
             state.temptOption = DOM.start.temptChk.checked;
 
+            DOM.game.atomView.classList.toggle('is-large', state.mode === 'atom');
+
             // Reset Grid Texts (Progressive)
             DOM.game.btnGrid.forEach(btn => {
                 const elData = DATA.find(item => item.n === parseInt(btn.dataset.n, 10));
@@ -1100,7 +1120,8 @@
                 DOM.game.qText.textContent = el.s;
                 // No visual
             } else if (state.mode === 'atom') {
-                DOM.game.qText.textContent = "?";
+                DOM.game.qText.textContent = "";
+                DOM.game.qOverlay.classList.add('utility-hidden');
                 renderBohr(el.n, 0, false); // No electrons, just Nucleus
             } else if (state.mode === 'ion') {
                 DOM.game.qOverlay.classList.add('utility-hidden');
@@ -1123,17 +1144,18 @@
          */
         function renderBohr(Z, eCount, showLabel) {
             const cont = DOM.game.atomView;
-            const size = 320;
+            const size = cont.clientWidth || 320;
             const center = size / 2;
+            const scale = size / 320;
 
             // 1. Electron Shells (Only if eCount > 0)
             if (eCount > 0) {
                 const shells = [];
-                if (eCount > 0) shells.push({ r: 60, cap: 2, count: 0 });
-                if (eCount > 2) shells.push({ r: 90, cap: 8, count: 0 });
-                if (eCount > 10) shells.push({ r: 120, cap: 8, count: 0 });
-                if (eCount > 18) shells.push({ r: 150, cap: 2, count: 0 });
-
+                if (eCount > 0) shells.push({ r: 60 * scale, cap: 2, count: 0 });
+                if (eCount > 2) shells.push({ r: 90 * scale, cap: 8, count: 0 });
+                if (eCount > 10) shells.push({ r: 120 * scale, cap: 8, count: 0 });
+                if (eCount > 18) shells.push({ r: 150 * scale, cap: 2, count: 0 });
+                
                 let eRem = eCount;
                 shells.forEach(sh => {
                     const n = Math.min(sh.cap, eRem);
@@ -1172,7 +1194,7 @@
                 const N = Z; // Simple
                 const total = Z + N;
                 // Adjust spacing for better visibility
-                const radius = Math.sqrt(total) * 7;
+                const radius = Math.sqrt(total) * 7 * scale;
 
                 for (let i = 0; i < total; i++) {
                     const isProton = i < Z;
