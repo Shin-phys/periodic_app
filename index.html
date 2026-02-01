@@ -989,7 +989,8 @@
             temptOption: false,
             playing: false, startTime: 0, timeDisplay: '00:00.00', timerEnabled: true,
             queue: [], qIndex: 0, misses: new Set(),
-            temptValid: true, temptTriggered: false
+            temptValid: true, temptTriggered: false,
+            inputLocked: false, inputUnlockTimer: null, nextQuestionTimer: null, feedbackTimer: null
         };
 
         const DOM = {
@@ -1069,7 +1070,11 @@
             state.mode = document.querySelector('input[name="mode"]:checked').value;
             state.input = document.querySelector('input[name="input"]:checked').value;
             state.temptOption = DOM.start.temptChk.checked;
-
+            state.inputLocked = false;
+            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
+            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
+            if (state.feedbackTimer) clearTimeout(state.feedbackTimer);
+            
             DOM.game.atomView.classList.toggle('is-large', state.mode === 'atom');
 
             // Reset Grid Texts (Progressive)
@@ -1115,6 +1120,7 @@
 
         function nextQuestion() {
             if (state.qIndex >= state.queue.length) { endGame(); return; }
+            state.inputLocked = false;
             const idx = state.queue[state.qIndex];
             const el = DATA[idx];
 
@@ -1254,13 +1260,13 @@
         function formatIon(el) { const mag = Math.abs(el.chg); const sign = el.chg > 0 ? '+' : '-'; return `${el.s}<sup>${(mag > 1 ? mag : '') + sign}</sup>`; }
 
         function handleIonInput(selectionHtml, correctHtml) {
-            if (!state.playing) return;
+            if (!state.playing || state.inputLocked) return;
             if (selectionHtml === correctHtml) success();
             else fail(DATA[state.queue[state.qIndex]].s + " (Ion)");
         }
 
         function handleInput(inputN, fromOCR = false) {
-            if (!state.playing) return;
+             if (!state.playing || state.inputLocked) return;
             const currentElIndex = state.queue[state.qIndex];
             const el = DATA[currentElIndex];
             const correctN = el.n;
@@ -1282,26 +1288,40 @@
 
         function success() {
             if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
-                audio.play('tempt'); showFeedback('tempt'); state.temptTriggered = true; return;
+                  audio.play('tempt');
+                showFeedback('tempt');
+                state.temptTriggered = true;
+                lockInput(500);
+                return;
             }
             audio.play('good'); showFeedback('correct');
-            state.qIndex++; setTimeout(nextQuestion, 400);
+            state.qIndex++;
+            state.inputLocked = true;
+            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
+            state.nextQuestionTimer = setTimeout(nextQuestion, 400);
         }
 
         function fail(label) {
             audio.play('tempt'); showFeedback('tempt');
             state.misses.add(label); state.temptValid = false;
+            lockInput(500);
         }
 
         function showFeedback(type) {
             const el = DOM.game.feedback;
             el.className = type === 'correct' ? 'feedback-overlay correct' : 'feedback-overlay tempt-style';
             el.textContent = type === 'correct' ? 'GOOD' : '本当に？';
-            el.style.opacity = 1; void el.offsetWidth; setTimeout(() => { el.style.opacity = 0; }, 500);
+            el.style.opacity = 1;
+            void el.offsetWidth;
+            if (state.feedbackTimer) clearTimeout(state.feedbackTimer);
+            state.feedbackTimer = setTimeout(() => { el.style.opacity = 0; }, 500);
         }
 
         function endGame() {
             state.playing = false;
+            state.inputLocked = true;
+            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
+            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
             // Only save score if timer was enabled
             if (state.timerEnabled) {
                 const old = localStorage.getItem('period_best');
@@ -1312,6 +1332,14 @@
             if (state.misses.size === 0) DOM.result.misses.innerHTML = '<li style="color:var(--neon-green)">PERFECT!</li>';
             else state.misses.forEach(m => { const li = document.createElement('li'); li.textContent = m; DOM.result.misses.appendChild(li); });
             setTimeout(() => switchScreen('result'), 500);
+        }
+
+        function lockInput(duration = 400) {
+            state.inputLocked = true;
+            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
+            state.inputUnlockTimer = setTimeout(() => {
+                state.inputLocked = false;
+            }, duration);
         }
 
         function loop() {
