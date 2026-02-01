@@ -323,6 +323,13 @@
             height: 20px;
             font-size: 12px;
         }
+        
+        .atom-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 157, 0.35));
+        }
 
         /* Bohr Model */
         .bohr-shell {
@@ -1122,7 +1129,7 @@
             } else if (state.mode === 'atom') {
                 DOM.game.qText.textContent = "";
                 DOM.game.qOverlay.classList.add('utility-hidden');
-                renderBohr(el.n, 0, false); // No electrons, just Nucleus
+                renderAtomImage(el.n);
             } else if (state.mode === 'ion') {
                 DOM.game.qOverlay.classList.add('utility-hidden');
                 const eCount = el.n - el.chg;
@@ -1215,6 +1222,15 @@
             cont.appendChild(nuc);
         }
 
+        function renderAtomImage(Z) {
+            const cont = DOM.game.atomView;
+            const img = document.createElement('img');
+            img.className = 'atom-image';
+            img.alt = `原子核モード:${Z}`;
+            img.src = `img/${String(Z).padStart(3, '0')}.png`;
+            cont.appendChild(img);
+        }
+        
         function generateIonChoices(correctEl) {
             const list = DOM.game.ionChoices;
             list.innerHTML = '';
