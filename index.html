@@ -1086,13 +1086,7 @@
 
             // Determine Timer & Queue
             state.timerEnabled = true;
-            if (state.mode === 'atom' || state.mode === 'ion' || state.input === 'write') {
-                state.timerEnabled = false;
-                DOM.game.timer.textContent = "--:--.--";
-                DOM.game.timer.style.opacity = 0.5;
-            } else {
-                DOM.game.timer.style.opacity = 1;
-            }
+            DOM.game.timer.style.opacity = 1;
 
             // Filter queue for Ion mode
             if (state.mode === 'ion') {
@@ -1272,7 +1266,22 @@
             const correctN = el.n;
 
             if (inputN === correctN) {
-                // Success Logic
+                success(inputN, el);
+            } else fail(el.s);
+            if (fromOCR) clearCanvas();
+        }
+
+        function success(inputN, el) {
+            if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
+                  audio.play('tempt');
+                showFeedback('tempt');
+                state.temptTriggered = true;
+                lockInput(500);
+                return;
+            }
+
+            // Success Logic
+            if (inputN !== undefined && el !== undefined) {
                 if (state.input === 'select' && (state.mode === 'name' || state.mode === 'symbol' || state.mode === 'atom')) {
                     // Progressive Grid Update
                     const btn = document.querySelector(`.el-btn[data-n="${inputN}"]`);
@@ -1281,19 +1290,8 @@
                         btn.style.color = 'var(--neon-green)';
                     }
                 }
-                success();
-            } else fail(el.s);
-            if (fromOCR) clearCanvas();
-        }
-
-        function success() {
-            if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
-                  audio.play('tempt');
-                showFeedback('tempt');
-                state.temptTriggered = true;
-                lockInput(500);
-                return;
             }
+
             audio.play('good'); showFeedback('correct');
             state.qIndex++;
             state.inputLocked = true;
@@ -1304,7 +1302,7 @@
         function fail(label) {
             audio.play('tempt'); showFeedback('tempt');
             state.misses.add(label); state.temptValid = false;
-            lockInput(500);
+            lockInput(800);
         }
 
         function showFeedback(type) {
