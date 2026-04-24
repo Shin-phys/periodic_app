@@ -1276,7 +1276,6 @@
                   audio.play('tempt');
                 showFeedback('tempt');
                 state.temptTriggered = true;
-                lockInput(500);
                 return;
             }
 
@@ -1302,7 +1301,7 @@
         function fail(label) {
             audio.play('tempt'); showFeedback('tempt');
             state.misses.add(label); state.temptValid = false;
-            lockInput(800);
+            lockInput(1000);
         }
 
         function showFeedback(type) {
