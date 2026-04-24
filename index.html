@@ -1301,7 +1301,7 @@
         function fail(label) {
             audio.play('tempt'); showFeedback('tempt');
             state.misses.add(label); state.temptValid = false;
-            lockInput(1000);
+            lockInput(2000);
         }
 
         function showFeedback(type) {
