@@ -644,15 +644,41 @@
             grid-column: 2;
         }
 
-        /* Canvas */
+        /* Canvas / Handwriting */
+        .write-stack {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
         .canvas-wrapper {
             width: 100%;
-            max-width: 360px;
-            aspect-ratio: 1;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px dashed var(--neon-blue);
+            aspect-ratio: 5 / 3;
+            background: rgba(0, 0, 0, 0.55);
+            border: 2px dashed rgba(0, 243, 255, 0.35);
             border-radius: 12px;
             position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .canvas-wrapper.is-ready {
+            border-color: rgba(0, 243, 255, 0.8);
+        }
+
+        .canvas-guide {
+            position: absolute;
+            left: 6%;
+            right: 6%;
+            top: 20%;
+            bottom: 20%;
+            border-top: 1px dashed rgba(255, 255, 255, 0.10);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.16);
+            pointer-events: none;
+            z-index: 1;
         }
 
         canvas {
@@ -660,55 +686,250 @@
             height: 100%;
             cursor: crosshair;
             touch-action: none;
+            position: relative;
+            z-index: 2;
+            display: block;
         }
 
         .ocr-status {
             position: absolute;
-            bottom: 10px;
+            bottom: 6px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.72);
             color: var(--neon-green);
-            padding: 4px 12px;
+            padding: 3px 12px;
             border-radius: 12px;
             pointer-events: none;
             font-family: monospace;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        .ocr-status.warn {
+            color: var(--neon-yellow);
         }
 
         .canvas-toolbar {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 6px;
+            right: 6px;
+            display: flex;
+            gap: 6px;
+            z-index: 3;
         }
 
         .canvas-toolbar button {
-            width: 40px;
-            height: 40px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            border: 1px solid #fff;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             background: rgba(0, 0, 0, 0.6);
             color: #fff;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 0;
+        }
+
+        .canvas-toolbar button:disabled {
+            opacity: 0.25;
+        }
+
+        .canvas-toolbar .material-symbols-outlined {
+            font-size: 19px;
+        }
+
+        /* Candidate rescue chips */
+        .cand-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            min-height: 44px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .cand-label {
+            color: #888;
+            font-size: 0.72rem;
+            font-family: var(--font-jp);
+        }
+
+        .cand-chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(0, 243, 255, 0.45);
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            padding: 9px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .cand-chip.best {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 12px rgba(0, 255, 157, 0.3);
+        }
+
+        .cand-chip:active {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        .write-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mini-btn {
+            background: none;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: var(--font-jp);
+        }
+
+        .mini-btn.danger {
+            border-color: #a33;
+            color: #e88;
         }
 
         .kb-panel {
-            margin-top: 10px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 5px;
             justify-content: center;
+            max-width: 380px;
         }
 
         .kb-key {
-            padding: 8px 10px;
-            background: #222;
+            padding: 9px 0;
+            width: 46px;
+            background: #1b1b28;
             border: 1px solid #444;
             color: #fff;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: bold;
+            font-family: var(--font-display);
+            cursor: pointer;
+        }
+
+        .kb-key:active {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        /* Retract toast */
+        .toast {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 20, 0.96);
+            border: 1px solid var(--neon-yellow);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            font-family: var(--font-jp);
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .toast button {
+            background: var(--neon-yellow);
+            color: #000;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: var(--font-jp);
+        }
+
+        /* Hint */
+        .hint-text {
+            font-family: var(--font-jp);
+            font-size: 1rem;
+            color: var(--neon-yellow);
+            margin-top: 4px;
+            min-height: 1.2em;
+        }
+
+        .el-btn.hint-on {
+            border-color: var(--neon-yellow) !important;
+            box-shadow: 0 0 12px var(--neon-yellow);
+        }
+
+        /* Result miss list */
+        .miss-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 34vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .miss-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 0, 85, 0.08);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            border-radius: 8px;
+            padding: 6px 10px;
+        }
+
+        .miss-list li.perfect {
+            background: rgba(0, 255, 157, 0.08);
+            border-color: rgba(0, 255, 157, 0.4);
+            color: var(--neon-green);
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .mi-n {
+            color: #777;
+            font-size: 0.75rem;
+            width: 20px;
+            text-align: right;
+        }
+
+        .mi-s {
+            font-family: var(--font-display);
+            color: #ff2b55;
+            font-size: 1.15rem;
+            min-width: 40px;
+            text-align: left;
+        }
+
+        .mi-ja {
+            font-family: var(--font-jp);
+            color: #ddd;
+            font-size: 0.92rem;
+        }
+
+        .mi-c {
+            margin-left: auto;
+            color: #666;
+            font-size: 0.72rem;
+            font-family: var(--font-jp);
         }
 
         /* Ion Choice Panel */
@@ -777,6 +998,13 @@
             color: transparent;
             -webkit-text-stroke: 2px var(--neon-green);
             text-shadow: 0 0 30px var(--neon-green);
+        }
+
+        .feedback-overlay.miss-style {
+            color: #ff2b55;
+            text-shadow: 0 0 25px #ff2b55;
+            font-size: 4.5rem;
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
         }
 
         .feedback-overlay.tempt-style {
@@ -852,6 +1080,11 @@
                     <input type="checkbox" id="chk-tempt">
                 </label>
 
+                <label class="option-check">
+                    <span>苦手を重点出題</span>
+                    <input type="checkbox" id="chk-weak" checked>
+                </label>
+
                 <button id="btn-start" class="start-btn">GAME START</button>
                 <div style="text-align:center; color:#888;">BEST: <span id="val-best"
                         style="color:var(--neon-yellow);">--:--.--</span></div>
@@ -876,6 +1109,7 @@
 
                 <div class="q-overlay">
                     <div id="q-text" class="q-text">Hydrogen</div>
+                    <div id="q-hint" class="hint-text"></div>
                 </div>
             </div>
 
@@ -910,18 +1144,25 @@
                 <!-- 2. Handwriting -->
                 <div id="pan-write" class="input-container utility-hidden">
                     <div class="input-view active">
-                        <div class="canvas-wrapper">
-                            <canvas id="cv-write"></canvas>
-                            <div class="canvas-toolbar">
-                                <button id="btn-clear"><span class="material-symbols-outlined">delete</span></button>
+                        <div class="write-stack">
+                            <div class="canvas-wrapper" id="cv-wrap">
+                                <div class="canvas-guide"></div>
+                                <canvas id="cv-write"></canvas>
+                                <div class="canvas-toolbar">
+                                    <button id="btn-undo" title="1画もどす" disabled><span
+                                            class="material-symbols-outlined">undo</span></button>
+                                    <button id="btn-clear" title="全部消す"><span
+                                            class="material-symbols-outlined">delete</span></button>
+                                </div>
+                                <div id="ocr-res" class="ocr-status">ここに元素記号を書く</div>
                             </div>
-                            <div id="ocr-res" class="ocr-status">...</div>
+                            <div id="cand-row" class="cand-row"></div>
+                            <div class="write-actions">
+                                <button id="btn-kb-toggle" class="mini-btn">記号パレット</button>
+                                <button id="btn-giveup" class="mini-btn danger">わからない</button>
+                            </div>
+                            <div id="kb-panel" class="kb-panel utility-hidden"></div>
                         </div>
-                        <div style="margin-top:10px;">
-                            <button id="btn-kb-toggle"
-                                style="background:none; border:1px solid #555; color:#aaa; padding:5px 10px; border-radius:15px; cursor:pointer;">KYBD</button>
-                        </div>
-                        <div id="kb-panel" class="kb-panel utility-hidden"></div>
                     </div>
                 </div>
 
@@ -946,13 +1187,15 @@
                 <div id="res-time"
                     style="font-family:var(--font-display); font-size:4rem; color:var(--neon-green); margin:20px 0;">
                     00:00.00</div>
-                <div id="miss-section">
-                    <p style="color:#aaa;">MISSES</p>
-                    <ul id="miss-list"
-                        style="list-style:none; padding:0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; color:#ff0055; font-weight:bold; font-size:1.5rem;">
-                    </ul>
+                <div id="miss-section" style="width:100%;">
+                    <p style="color:#aaa; margin:0 0 8px;">MISSES</p>
+                    <ul id="miss-list" class="miss-list"></ul>
                 </div>
-                <button id="btn-retry" class="start-btn" style="margin-top:20px;">RETRY</button>
+                <div style="display:flex; gap:10px; margin-top:20px; width:100%;">
+                    <button id="btn-review" class="start-btn"
+                        style="flex:1; font-size:1.05rem; background:linear-gradient(135deg,var(--neon-yellow),#c8a200); box-shadow:0 0 15px rgba(250,255,0,0.3);">復習</button>
+                    <button id="btn-retry" class="start-btn" style="flex:1; font-size:1.05rem;">RETRY</button>
+                </div>
             </div>
         </section>
     </div>
@@ -986,27 +1229,38 @@
 
         const state = {
             screen: 'start', mode: 'name', input: 'select',
-            temptOption: false,
+            temptOption: false, weakFirst: true,
             playing: false, startTime: 0, timeDisplay: '00:00.00', timerEnabled: true,
-            queue: [], qIndex: 0, misses: new Set(),
+            queue: [], qIndex: 0, misses: new Set(), lastMisses: [],
             temptValid: true, temptTriggered: false,
-            inputLocked: false, inputUnlockTimer: null, nextQuestionTimer: null, feedbackTimer: null
+            inputLocked: false, inputUnlockTimer: null, nextQuestionTimer: null, feedbackTimer: null,
+            wrongStreak: 0, ocrRetracted: false
         };
 
         const DOM = {
             screens: { start: document.getElementById('start-screen'), game: document.getElementById('game-screen'), result: document.getElementById('result-screen') },
-            start: { btn: document.getElementById('btn-start'), best: document.getElementById('val-best'), temptChk: document.getElementById('chk-tempt') },
+            start: {
+                btn: document.getElementById('btn-start'), best: document.getElementById('val-best'),
+                temptChk: document.getElementById('chk-tempt'), weakChk: document.getElementById('chk-weak')
+            },
             game: {
                 bar: document.getElementById('bar-progress'), timer: document.getElementById('timer-val'), home: document.getElementById('btn-home'),
-                qOverlay: document.querySelector('.q-overlay'), qText: document.getElementById('q-text'), atomView: document.getElementById('atom-view'),
+                qOverlay: document.querySelector('.q-overlay'), qText: document.getElementById('q-text'), qHint: document.getElementById('q-hint'),
+                atomView: document.getElementById('atom-view'),
                 panSel: document.getElementById('pan-select'), panWrite: document.getElementById('pan-write'), panIon: document.getElementById('pan-ion'),
                 ionChoices: document.getElementById('ion-choices'),
                 btnGrid: document.querySelectorAll('.el-btn'),
                 feedback: document.getElementById('feedback'),
-                canvas: document.getElementById('cv-write'), ocr: document.getElementById('ocr-res'),
+                canvas: document.getElementById('cv-write'), cvWrap: document.getElementById('cv-wrap'), ocr: document.getElementById('ocr-res'),
+                candRow: document.getElementById('cand-row'),
+                btnUndo: document.getElementById('btn-undo'), btnClear: document.getElementById('btn-clear'),
+                btnGiveup: document.getElementById('btn-giveup'),
                 kbToggle: document.getElementById('btn-kb-toggle'), kbPanel: document.getElementById('kb-panel')
             },
-            result: { time: document.getElementById('res-time'), misses: document.getElementById('miss-list'), retry: document.getElementById('btn-retry') }
+            result: {
+                time: document.getElementById('res-time'), misses: document.getElementById('miss-list'),
+                retry: document.getElementById('btn-retry'), review: document.getElementById('btn-review')
+            }
         };
 
         // Audio
@@ -1023,6 +1277,10 @@
                     osc.frequency.setValueAtTime(880, t); osc.frequency.exponentialRampToValueAtTime(1760, t + 0.1);
                     gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
                     osc.start(t); osc.stop(t + 0.3);
+                } else if (type === 'miss') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, t); osc.frequency.exponentialRampToValueAtTime(110, t + 0.25);
+                    gain.gain.setValueAtTime(0.12, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+                    osc.start(t); osc.stop(t + 0.3);
                 } else {
                     osc.type = 'square'; osc.frequency.setValueAtTime(300, t); osc.frequency.linearRampToValueAtTime(350, t + 0.1);
                     gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
@@ -1032,31 +1290,291 @@
         };
 
         const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+        const byN = (n) => DATA.find(e => e.n === n);
 
+        /* ============================================================
+         * 学習履歴 (苦手を重点出題する)
+         * ========================================================== */
+        const STATS_KEY = 'period_stats_v1';
+        let STATS = (() => { try { return JSON.parse(localStorage.getItem(STATS_KEY)) || {}; } catch (e) { return {}; } })();
+        function statOf(n) { const k = String(n); if (!STATS[k]) STATS[k] = { seen: 0, miss: 0, last: 0 }; return STATS[k]; }
+        function saveStats() { try { localStorage.setItem(STATS_KEY, JSON.stringify(STATS)); } catch (e) { } }
+        function weightOf(n) {
+            const st = STATS[String(n)];
+            if (!st || !st.seen) return 1.8;                 // 未出題は少し優先
+            let w = 1 + (st.miss / st.seen) * 4.5;
+            if (st.last && Date.now() - st.last < 3 * 864e5) w += 1.2;   // 直近3日でミス
+            return w;
+        }
+        // 重み付きサンプリング。苦手なものほど前半に来る。
+        function weightedOrder(indices) {
+            const pool = indices.slice(), out = [];
+            while (pool.length) {
+                const ws = pool.map(i => weightOf(DATA[i].n) * (0.55 + Math.random() * 0.9));
+                const total = ws.reduce((a, b) => a + b, 0);
+                let r = Math.random() * total, pick = pool.length - 1;
+                for (let k = 0; k < ws.length; k++) { r -= ws[k]; if (r <= 0) { pick = k; break; } }
+                out.push(pool.splice(pick, 1)[0]);
+            }
+            return out;
+        }
+
+        /* ============================================================
+         * オフライン手書き認識エンジン
+         *   20元素記号の語彙に制約した「文字分割 + チャンファー距離
+         *   テンプレートマッチング」。Tesseract より軽く・確実。
+         * ========================================================== */
+        const Recog = (function () {
+            const G = 32, PAD = 3, BOX = G - PAD * 2;
+            const FONTS = [
+                '700 {S}px Arial, Helvetica, sans-serif',
+                '400 {S}px Arial, Helvetica, sans-serif',
+                '400 {S}px Georgia, "Times New Roman", serif',
+                '700 {S}px "Trebuchet MS", Arial, sans-serif',
+                'italic 400 {S}px Arial, Helvetica, sans-serif',
+                '400 {S}px "Courier New", monospace'
+            ];
+            // 1〜20番の記号に登場する文字（大文字/小文字の両方を用意し、
+            // 「CL」「na」のような大小の書き間違いも吸収する）
+            const CHARS = ('HLBCNOFMASPKEIGR' + 'hlbcnofmaspkeigr').split('');
+            const tpl = {};
+            let built = false;
+
+            function maskOf(x, W, H) {
+                const d = x.getImageData(0, 0, W, H).data, m = new Uint8Array(W * H);
+                for (let i = 0, p = 0; p < m.length; i += 4, p++) m[p] = d[i] < 150 ? 1 : 0;
+                return m;
+            }
+            function bbox(m, W, H, xa, xb) {
+                const X1 = xa === undefined ? 0 : xa, X2 = xb === undefined ? W - 1 : xb;
+                let x1 = 1e9, y1 = 1e9, x2 = -1, y2 = -1;
+                for (let y = 0; y < H; y++) {
+                    const row = y * W;
+                    for (let x = X1; x <= X2; x++) if (m[row + x]) {
+                        if (x < x1) x1 = x; if (x > x2) x2 = x;
+                        if (y < y1) y1 = y; if (y > y2) y2 = y;
+                    }
+                }
+                return x2 < 0 ? null : { x1, y1, x2, y2 };
+            }
+            // bbox を切り出して 32x32 に正規化（アスペクト比は保持）
+            function normalize(m, W, H, b) {
+                if (!b) return null;
+                const w = b.x2 - b.x1 + 1, h = b.y2 - b.y1 + 1;
+                const sc = BOX / Math.max(w, h);
+                const tw = Math.max(1, Math.round(w * sc)), th = Math.max(1, Math.round(h * sc));
+                const ox = PAD + ((BOX - tw) >> 1), oy = PAD + ((BOX - th) >> 1);
+                const g = new Uint8Array(G * G);
+                let ink = 0;
+                for (let ty = 0; ty < th; ty++) {
+                    const sy0 = b.y1 + Math.floor(ty * h / th);
+                    const sy1 = Math.max(b.y1 + Math.floor((ty + 1) * h / th), sy0 + 1);
+                    for (let tx = 0; tx < tw; tx++) {
+                        const sx0 = b.x1 + Math.floor(tx * w / tw);
+                        const sx1 = Math.max(b.x1 + Math.floor((tx + 1) * w / tw), sx0 + 1);
+                        let hit = 0;
+                        for (let sy = sy0; sy < sy1 && !hit; sy++) {
+                            const row = sy * W;
+                            for (let sx = sx0; sx < sx1; sx++) if (m[row + sx]) { hit = 1; break; }
+                        }
+                        if (hit) { g[(oy + ty) * G + (ox + tx)] = 1; ink++; }
+                    }
+                }
+                if (!ink) return null;
+                return { grid: g, dt: distTransform(g), asp: w / h, ink, cache: {} };
+            }
+            function distTransform(g) {
+                const d = new Float32Array(G * G), a = 1, b = 1.41421;
+                for (let i = 0; i < d.length; i++) d[i] = g[i] ? 0 : 999;
+                for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) {
+                    const i = y * G + x; let v = d[i];
+                    if (x > 0) v = Math.min(v, d[i - 1] + a);
+                    if (y > 0) v = Math.min(v, d[i - G] + a);
+                    if (x > 0 && y > 0) v = Math.min(v, d[i - G - 1] + b);
+                    if (x < G - 1 && y > 0) v = Math.min(v, d[i - G + 1] + b);
+                    d[i] = v;
+                }
+                for (let y = G - 1; y >= 0; y--) for (let x = G - 1; x >= 0; x--) {
+                    const i = y * G + x; let v = d[i];
+                    if (x < G - 1) v = Math.min(v, d[i + 1] + a);
+                    if (y < G - 1) v = Math.min(v, d[i + G] + a);
+                    if (x < G - 1 && y < G - 1) v = Math.min(v, d[i + G + 1] + b);
+                    if (x > 0 && y < G - 1) v = Math.min(v, d[i + G - 1] + b);
+                    d[i] = v;
+                }
+                return d;
+            }
+            function build() {
+                if (built) return; built = true;
+                const S = 120, W = 170, H = 190;
+                const c = document.createElement('canvas'); c.width = W; c.height = H;
+                const x = c.getContext('2d', { willReadFrequently: true });
+                CHARS.forEach(ch => {
+                    tpl[ch] = [];
+                    FONTS.forEach(f => {
+                        x.fillStyle = '#fff'; x.fillRect(0, 0, W, H);
+                        x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle';
+                        x.font = f.replace('{S}', S);
+                        x.fillText(ch, W / 2, H / 2);
+                        const m = maskOf(x, W, H);
+                        const n = normalize(m, W, H, bbox(m, W, H));
+                        if (n) tpl[ch].push(n);
+                    });
+                });
+            }
+            // 双方向チャンファー距離。3乗平均にすることで「P と F」のような
+            // 局所的な差（一部だけズレている）をきちんと拾う。
+            function cmp(u, t) {
+                let s1 = 0, n1 = 0, s2 = 0, n2 = 0, v;
+                for (let i = 0; i < G * G; i++) {
+                    if (u.grid[i]) { v = t.dt[i]; s1 += v * v * v; n1++; }
+                    if (t.grid[i]) { v = u.dt[i]; s2 += v * v * v; n2++; }
+                }
+                const a1 = n1 ? Math.cbrt(s1 / n1) : 30;
+                const a2 = n2 ? Math.cbrt(s2 / n2) : 30;
+                let d = a1 * 0.55 + a2 * 0.45;
+                d += 1.6 * Math.abs(Math.log((u.asp + 0.02) / (t.asp + 0.02)));
+                return d;
+            }
+            function glyph(u, ch) {
+                if (u.cache && ch in u.cache) return u.cache[ch];   // 記号間で使い回す
+                const arr = tpl[ch];
+                let best = 99;
+                if (arr) for (let i = 0; i < arr.length; i++) { const d = cmp(u, arr[i]); if (d < best) best = d; }
+                if (u.cache) u.cache[ch] = best;
+                return best;
+            }
+            // 大小の書き間違いは軽いペナルティで許容
+            function letterScore(u, ch, expectUpper) {
+                const su = glyph(u, ch.toUpperCase()), sl = glyph(u, ch.toLowerCase());
+                return expectUpper ? Math.min(su, sl + 0.35) : Math.min(sl, su + 0.35);
+            }
+            // ストロークを白地・黒線のビットマップへ
+            function raster(strokes, cw, chh, lw) {
+                if (!strokes || !strokes.length || chh < 4) return null;
+                const s = 96 / chh;
+                const W = Math.max(8, Math.round(cw * s)), H = 96;
+                const c = document.createElement('canvas'); c.width = W; c.height = H;
+                const x = c.getContext('2d', { willReadFrequently: true });
+                x.fillStyle = '#fff'; x.fillRect(0, 0, W, H);
+                x.strokeStyle = '#000'; x.fillStyle = '#000';
+                x.lineWidth = Math.max(2.5, lw * s); x.lineCap = 'round'; x.lineJoin = 'round';
+                strokes.forEach(st => {
+                    if (st.length === 1) { x.beginPath(); x.arc(st[0].x * s, st[0].y * s, x.lineWidth / 2, 0, 6.2832); x.fill(); return; }
+                    x.beginPath(); x.moveTo(st[0].x * s, st[0].y * s);
+                    for (let i = 1; i < st.length; i++) x.lineTo(st[i].x * s, st[i].y * s);
+                    x.stroke();
+                });
+                return { mask: maskOf(x, W, H), W, H, canvas: c };
+            }
+            // 縦方向の投影から文字の切れ目を探す
+            function segmentize(mask, W, H, b) {
+                const col = new Uint16Array(W);
+                for (let y = b.y1; y <= b.y2; y++) { const row = y * W; for (let x = b.x1; x <= b.x2; x++) if (mask[row + x]) col[x]++; }
+                const gapMin = Math.max(2, Math.round((b.y2 - b.y1 + 1) * 0.11));
+                const segs = []; let s = -1, gap = 0;
+                for (let x = b.x1; x <= b.x2; x++) {
+                    if (col[x] > 0) { if (s < 0) s = x; gap = 0; }
+                    else if (s >= 0) { gap++; if (gap >= gapMin) { segs.push({ x1: s, x2: x - gap }); s = -1; } }
+                }
+                if (s >= 0) segs.push({ x1: s, x2: b.x2 });
+                return { segs, col };
+            }
+
+            function recognize(strokes, cw, chh, lw) {
+                build();
+                const r = raster(strokes, cw, chh, lw);
+                if (!r) return null;
+                const b = bbox(r.mask, r.W, r.H);
+                if (!b) return null;
+                const whole = normalize(r.mask, r.W, r.H, b);
+                if (!whole) return null;
+
+                const { segs, col } = segmentize(r.mask, r.W, r.H, b);
+                const cuts = [];
+                for (let i = 0; i + 1 < segs.length; i++) cuts.push((segs[i].x2 + segs[i + 1].x1) >> 1);
+                if (segs.length === 1) {
+                    // つなげて書かれた2文字かもしれない → 一番薄い列で割ってみる
+                    const w = b.x2 - b.x1 + 1, h = b.y2 - b.y1 + 1;
+                    if (w / h > 0.8) {
+                        let bx = -1, bv = 1e9;
+                        for (let x = b.x1 + Math.round(w * 0.3); x <= b.x1 + Math.round(w * 0.72); x++) {
+                            if (col[x] < bv) { bv = col[x]; bx = x; }
+                        }
+                        if (bx > b.x1) cuts.push(bx);
+                    }
+                }
+                const splits = [];
+                cuts.forEach(cx => {
+                    const bl = bbox(r.mask, r.W, r.H, b.x1, cx), br = bbox(r.mask, r.W, r.H, cx + 1, b.x2);
+                    if (!bl || !br) return;
+                    const L = normalize(r.mask, r.W, r.H, bl), R = normalize(r.mask, r.W, r.H, br);
+                    if (L && R) splits.push({ L, R });
+                });
+
+                const out = DATA.map(el => {
+                    let sc;
+                    if (el.s.length === 1) {
+                        sc = letterScore(whole, el.s[0], true);
+                        if (segs.length >= 2) sc += 0.55;      // 明らかに2文字なら1文字記号は不利に
+                    } else {
+                        sc = 99;
+                        splits.forEach(sp => {
+                            const d = letterScore(sp.L, el.s[0], true) * 0.5 + letterScore(sp.R, el.s[1], false) * 0.5;
+                            if (d < sc) sc = d;
+                        });
+                        if (segs.length === 1) sc += 0.45;     // 1かたまりなら2文字記号は不利に
+                    }
+                    return { n: el.n, sym: el.s, score: sc };
+                }).sort((a, b2) => a.score - b2.score);
+
+                return { cands: out, img: r.canvas, segs: segs.length };
+            }
+
+            return { recognize: recognize, warm: build };
+        })();
+
+        /* ============================================================
+         * ゲーム進行
+         * ========================================================== */
         function init() {
             const best = localStorage.getItem('period_best');
             if (best) DOM.start.best.textContent = best;
 
-            DOM.start.btn.addEventListener('click', startGame);
+            DOM.start.btn.addEventListener('click', () => startGame(null));
             DOM.result.retry.addEventListener('click', () => switchScreen('start'));
-            DOM.game.home.addEventListener('click', () => { state.playing = false; switchScreen('start'); });
+            DOM.result.review.addEventListener('click', () => {
+                if (state.lastMisses.length) startGame(state.lastMisses.slice());
+                else switchScreen('start');
+            });
+            DOM.game.home.addEventListener('click', () => { state.playing = false; saveStats(); switchScreen('start'); });
 
-            // Grid Events
             DOM.game.btnGrid.forEach(btn => {
-                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput(parseInt(btn.dataset.n)); });
+                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput(parseInt(btn.dataset.n, 10), 'tap'); });
             });
 
-            // Canvas
-            initCanvas();
+            // 記号パレット（手書きが通らないときの最終手段）
             DOM.game.kbToggle.addEventListener('click', () => {
-                DOM.game.kbPanel.classList.toggle('utility-hidden');
                 if (!DOM.game.kbPanel.hasChildNodes()) {
                     DATA.forEach(e => {
-                        const btn = document.createElement('button'); btn.className = 'kb-key'; btn.textContent = e.s;
-                        btn.onclick = () => handleInput(e.n); DOM.game.kbPanel.appendChild(btn);
+                        const btn = document.createElement('button');
+                        btn.className = 'kb-key'; btn.textContent = e.s;
+                        btn.addEventListener('pointerdown', (ev) => { ev.preventDefault(); handleInput(e.n, 'palette'); });
+                        DOM.game.kbPanel.appendChild(btn);
                     });
                 }
+                const hidden = DOM.game.kbPanel.classList.toggle('utility-hidden');
+                DOM.game.kbToggle.textContent = hidden ? '記号パレット' : 'パレットを閉じる';
             });
+
+            DOM.game.btnGiveup.addEventListener('click', () => giveUp());
+
+            Write.init();
+            document.addEventListener('keydown', onKeyDown);
+            // フォント読み込み後にテンプレートを構築（描画を邪魔しないよう遅延）
+            const warm = () => setTimeout(() => { Recog.warm(); DOM.game.cvWrap.classList.add('is-ready'); }, 60);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(warm); else warm();
+            initOCR();
         }
 
         function switchScreen(name) {
@@ -1065,37 +1583,43 @@
             state.screen = name;
         }
 
-        function startGame() {
+        function startGame(forcedIdx) {
             audio.init();
             state.mode = document.querySelector('input[name="mode"]:checked').value;
             state.input = document.querySelector('input[name="input"]:checked').value;
             state.temptOption = DOM.start.temptChk.checked;
+            state.weakFirst = DOM.start.weakChk.checked;
             state.inputLocked = false;
-            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
-            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
-            if (state.feedbackTimer) clearTimeout(state.feedbackTimer);
-            
+            state.wrongStreak = 0;
+            clearTimeout(state.inputUnlockTimer);
+            clearTimeout(state.nextQuestionTimer);
+            clearTimeout(state.feedbackTimer);
+            hideToast();
+
             DOM.game.atomView.classList.toggle('is-large', state.mode === 'atom');
 
-            // Reset Grid Texts (Progressive)
             DOM.game.btnGrid.forEach(btn => {
-                const elData = DATA.find(item => item.n === parseInt(btn.dataset.n, 10));
-                btn.textContent = state.mode === 'atom' && elData ? elData.s : btn.dataset.n; // 1-20 or symbol
+                const d = byN(parseInt(btn.dataset.n, 10));
+                btn.textContent = (state.mode === 'atom' && d) ? d.s : btn.dataset.n;
                 btn.style.color = '#eee';
+                btn.classList.remove('hint-on');
             });
 
-            // Determine Timer & Queue
             state.timerEnabled = true;
             DOM.game.timer.style.opacity = 1;
 
-            // Filter queue for Ion mode
+            // 出題リスト（復習指定 > モード制約 > 苦手重み付け）
+            state.isReview = !!(Array.isArray(forcedIdx) && forcedIdx.length);
+            let base = state.isReview ? forcedIdx.slice() : [...Array(20).keys()];
+            if (state.mode === 'ion') base = base.filter(i => DATA[i].ion !== null);
+            if (!base.length) base = DATA.map((d, i) => d.ion !== null ? i : -1).filter(i => i >= 0);
+            state.queue = state.weakFirst ? weightedOrder(base) : shuffle(base);
+
             if (state.mode === 'ion') {
-                state.queue = shuffle(DATA.filter(d => d.ion !== null).map(d => DATA.indexOf(d)));
                 DOM.game.panSel.classList.add('utility-hidden');
                 DOM.game.panWrite.classList.add('utility-hidden');
                 DOM.game.panIon.classList.remove('utility-hidden');
             } else {
-                state.queue = shuffle([...Array(20).keys()]);
                 DOM.game.panSel.classList.toggle('utility-hidden', state.input !== 'select');
                 DOM.game.panWrite.classList.toggle('utility-hidden', state.input !== 'write');
                 DOM.game.panIon.classList.add('utility-hidden');
@@ -1108,45 +1632,47 @@
             state.temptValid = true;
 
             switchScreen('game');
+            requestAnimationFrame(() => Write.refit());
             nextQuestion();
             if (state.timerEnabled) requestAnimationFrame(loop);
         }
 
+        function currentEl() { return DATA[state.queue[state.qIndex]]; }
+
         function nextQuestion() {
             if (state.qIndex >= state.queue.length) { endGame(); return; }
             state.inputLocked = false;
-            const idx = state.queue[state.qIndex];
-            const el = DATA[idx];
+            state.wrongStreak = 0;
+            const el = currentEl();
+            statOf(el.n).seen++;
 
-            // Reset Visuals
             DOM.game.atomView.innerHTML = '';
             DOM.game.qOverlay.classList.remove('utility-hidden');
+            DOM.game.qHint.textContent = '';
+            DOM.game.btnGrid.forEach(b => b.classList.remove('hint-on'));
+            hideToast();
 
-            // Mode Logic (Visuals)
             if (state.mode === 'name') {
                 DOM.game.qText.textContent = el.ja;
-                // No visual
             } else if (state.mode === 'symbol') {
                 DOM.game.qText.textContent = el.s;
-                // No visual
             } else if (state.mode === 'atom') {
                 DOM.game.qText.textContent = "";
                 DOM.game.qOverlay.classList.add('utility-hidden');
                 renderAtomImage(el.n);
             } else if (state.mode === 'ion') {
                 DOM.game.qOverlay.classList.add('utility-hidden');
-                const eCount = el.n - el.chg;
-                renderBohr(el.n, eCount, true); // Full electrons + Ion text
+                renderBohr(el.n, el.n - el.chg, true);
                 generateIonChoices(el);
             }
 
             DOM.game.bar.style.width = `${(state.qIndex / state.queue.length) * 100}%`;
             state.temptValid = true;
             state.temptTriggered = false;
-            clearCanvas();
+            Write.clear();
         }
 
-        /** 
+        /**
          * renderBohr
          * @param {number} Z - Atomic Number
          * @param {number} eCount - Electron Count (0 to hide electrons/shells)
@@ -1158,26 +1684,23 @@
             const center = size / 2;
             const scale = size / 320;
 
-            // 1. Electron Shells (Only if eCount > 0)
             if (eCount > 0) {
                 const shells = [];
                 if (eCount > 0) shells.push({ r: 60 * scale, cap: 2, count: 0 });
                 if (eCount > 2) shells.push({ r: 90 * scale, cap: 8, count: 0 });
                 if (eCount > 10) shells.push({ r: 120 * scale, cap: 8, count: 0 });
                 if (eCount > 18) shells.push({ r: 150 * scale, cap: 2, count: 0 });
-                
+
                 let eRem = eCount;
                 shells.forEach(sh => {
                     const n = Math.min(sh.cap, eRem);
                     sh.count = n; eRem -= n;
 
-                    // Draw Shell
                     const ring = document.createElement('div');
                     ring.className = 'bohr-shell';
                     ring.style.width = ring.style.height = `${sh.r * 2}px`;
                     cont.appendChild(ring);
 
-                    // Draw Electrons
                     for (let i = 0; i < n; i++) {
                         const angle = (2 * Math.PI * i) / n - Math.PI / 2;
                         const el = document.createElement('div');
@@ -1189,36 +1712,26 @@
                 });
             }
 
-            // 2. Nucleus
             const nuc = document.createElement('div');
             nuc.className = 'nucleus-group';
 
             if (showLabel) {
-                // Text label (+11)
                 const lbl = document.createElement('div');
                 lbl.className = 'ion-label';
                 lbl.textContent = `+${Z}`;
                 nuc.appendChild(lbl);
             } else {
-                // Particle Cluster
-                const N = Z; // Simple
+                const N = Z;
                 const total = Z + N;
-                // Adjust spacing for better visibility
                 const radius = Math.sqrt(total) * 7 * scale;
-
                 for (let i = 0; i < total; i++) {
                     const isProton = i < Z;
                     const p = document.createElement('div');
                     p.className = `particle ${isProton ? 'proton' : 'neutron'}`;
                     if (isProton) p.textContent = '+';
-
-                    // Better packing
                     const r = Math.pow(Math.random(), 0.5) * radius * 0.9;
                     const th = Math.random() * 2 * Math.PI;
-                    const x = r * Math.cos(th);
-                    const y = r * Math.sin(th);
-
-                    p.style.transform = `translate(${x}px, ${y}px)`;
+                    p.style.transform = `translate(${r * Math.cos(th)}px, ${r * Math.sin(th)}px)`;
                     nuc.appendChild(p);
                 }
             }
@@ -1226,14 +1739,13 @@
         }
 
         function renderAtomImage(Z) {
-            const cont = DOM.game.atomView;
             const img = document.createElement('img');
             img.className = 'atom-image';
             img.alt = `原子核モード:${Z}`;
             img.src = `img/${String(Z).padStart(3, '0')}.png`;
-            cont.appendChild(img);
+            DOM.game.atomView.appendChild(img);
         }
-        
+
         function generateIonChoices(correctEl) {
             const list = DOM.game.ionChoices;
             list.innerHTML = '';
@@ -1255,123 +1767,435 @@
 
         function handleIonInput(selectionHtml, correctHtml) {
             if (!state.playing || state.inputLocked) return;
-            if (selectionHtml === correctHtml) success();
-            else fail(DATA[state.queue[state.qIndex]].s + " (Ion)");
+            if (selectionHtml === correctHtml) success(currentEl().n, currentEl());
+            else fail(currentEl(), 'tap');
         }
 
-        function handleInput(inputN, fromOCR = false) {
-             if (!state.playing || state.inputLocked) return;
-            const currentElIndex = state.queue[state.qIndex];
-            const el = DATA[currentElIndex];
-            const correctN = el.n;
-
-            if (inputN === correctN) {
-                success(inputN, el);
-            } else fail(el.s);
-            if (fromOCR) clearCanvas();
+        /**
+         * @param {number} inputN 入力された原子番号
+         * @param {string} src 'tap' | 'ocr' | 'palette' | 'key'
+         * @param {string} [shown] 手書き認識で表示された記号
+         */
+        function handleInput(inputN, src, shown) {
+            if (!state.playing || state.inputLocked) return;
+            const el = currentEl();
+            if (inputN === el.n) success(inputN, el);
+            else fail(el, src, shown, inputN);
+            if (src === 'ocr' || src === 'palette' || src === 'key') Write.clear();
         }
 
         function success(inputN, el) {
             if (state.temptOption && state.temptValid && !state.temptTriggered && Math.random() < 0.2) {
-                  audio.play('tempt');
+                audio.play('tempt');
                 showFeedback('tempt');
                 state.temptTriggered = true;
+                Write.clear();
                 return;
             }
 
-            // Success Logic
             if (inputN !== undefined && el !== undefined) {
-                if (state.input === 'select' && (state.mode === 'name' || state.mode === 'symbol' || state.mode === 'atom')) {
-                    // Progressive Grid Update
+                if (state.input === 'select' && state.mode !== 'ion') {
                     const btn = document.querySelector(`.el-btn[data-n="${inputN}"]`);
-                    if (btn) {
-                        btn.textContent = el.s;
-                        btn.style.color = 'var(--neon-green)';
-                    }
+                    if (btn) { btn.textContent = el.s; btn.style.color = 'var(--neon-green)'; }
                 }
             }
 
             audio.play('good'); showFeedback('correct');
+            hideToast();
             state.qIndex++;
             state.inputLocked = true;
-            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
+            clearTimeout(state.nextQuestionTimer);
             state.nextQuestionTimer = setTimeout(nextQuestion, 400);
         }
 
-        function fail(label) {
-            audio.play('tempt'); showFeedback('tempt');
-            state.misses.add(label); state.temptValid = false;
-            lockInput(2000);
+        function fail(el, src, shown, inputN) {
+            audio.play('miss'); showFeedback('miss');
+            const wasNew = !state.misses.has(el.n);
+            state.misses.add(el.n);
+            const st = statOf(el.n); st.miss++; st.last = Date.now();
+            state.temptValid = false;
+            state.wrongStreak++;
+            lockInput(700);
+
+            // 誤認識の救済：OCR 経由の不正解はワンタップで取り消せる
+            if (src === 'ocr') {
+                const label = shown || (inputN ? (byN(inputN) || {}).s : '') || '?';
+                showToast(`「${label}」と認識されました`, '書き間違いじゃない', () => {
+                    if (wasNew) state.misses.delete(el.n);
+                    st.miss = Math.max(0, st.miss - 1);
+                    state.wrongStreak = Math.max(0, state.wrongStreak - 1);
+                    state.inputLocked = false;
+                    clearTimeout(state.inputUnlockTimer);
+                    Write.clear();
+                    DOM.game.qHint.textContent = '';
+                });
+            }
+            if (state.wrongStreak >= 2) showHint(el);
+        }
+
+        // 2回連続で間違えたらヒントを出す（詰まって止まらないように）
+        function showHint(el) {
+            let t = '';
+            if (state.mode === 'name') t = `ヒント: ${el.n}番・${el.s}`;
+            else if (state.mode === 'symbol') t = `ヒント: ${el.ja}（${el.n}番）`;
+            else if (state.mode === 'atom') t = `ヒント: ${el.ja}（${el.s}）`;
+            else t = `ヒント: ${el.ja}は${el.chg > 0 ? '陽' : '陰'}イオン(${Math.abs(el.chg)}価)`;
+            DOM.game.qOverlay.classList.remove('utility-hidden');
+            DOM.game.qHint.textContent = t;
+            if (state.input === 'select' && state.mode !== 'ion') {
+                const btn = document.querySelector(`.el-btn[data-n="${el.n}"]`);
+                if (btn) btn.classList.add('hint-on');
+            }
+        }
+
+        function giveUp() {
+            if (!state.playing || state.inputLocked) return;
+            const el = currentEl();
+            state.misses.add(el.n);
+            const st = statOf(el.n); st.miss++; st.last = Date.now();
+            DOM.game.qOverlay.classList.remove('utility-hidden');
+            DOM.game.qHint.textContent = `答え: ${el.s}（${el.ja}・${el.n}番）`;
+            state.inputLocked = true;
+            Write.clear();
+            clearTimeout(state.nextQuestionTimer);
+            state.qIndex++;
+            state.nextQuestionTimer = setTimeout(nextQuestion, 1600);
         }
 
         function showFeedback(type) {
             const el = DOM.game.feedback;
-            el.className = type === 'correct' ? 'feedback-overlay correct' : 'feedback-overlay tempt-style';
-            el.textContent = type === 'correct' ? 'GOOD' : '本当に？';
+            el.className = 'feedback-overlay ' + (type === 'correct' ? 'correct' : type === 'miss' ? 'miss-style' : 'tempt-style');
+            el.textContent = type === 'correct' ? 'GOOD' : type === 'miss' ? 'MISS' : '本当に？';
             el.style.opacity = 1;
             void el.offsetWidth;
-            if (state.feedbackTimer) clearTimeout(state.feedbackTimer);
+            clearTimeout(state.feedbackTimer);
             state.feedbackTimer = setTimeout(() => { el.style.opacity = 0; }, 500);
+        }
+
+        /* ---- トースト（誤認識の取り消し） ---- */
+        let toastEl = null, toastTimer = null;
+        function showToast(msg, btnLabel, onClick, ms) {
+            hideToast();
+            toastEl = document.createElement('div');
+            toastEl.className = 'toast';
+            const span = document.createElement('span'); span.textContent = msg;
+            const b = document.createElement('button'); b.textContent = btnLabel;
+            b.addEventListener('click', () => { hideToast(); onClick(); });
+            toastEl.appendChild(span); toastEl.appendChild(b);
+            DOM.screens.game.appendChild(toastEl);
+            toastTimer = setTimeout(hideToast, ms || 3500);
+        }
+        function hideToast() {
+            clearTimeout(toastTimer);
+            if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
+            toastEl = null;
         }
 
         function endGame() {
             state.playing = false;
             state.inputLocked = true;
-            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
-            if (state.nextQuestionTimer) clearTimeout(state.nextQuestionTimer);
-            // Only save score if timer was enabled
-            if (state.timerEnabled) {
+            clearTimeout(state.inputUnlockTimer);
+            clearTimeout(state.nextQuestionTimer);
+            hideToast();
+            saveStats();
+
+            // 復習など出題数が少ない回はベスト記録の対象外
+            if (state.timerEnabled && !state.isReview && state.queue.length >= 18) {
                 const old = localStorage.getItem('period_best');
                 if (!old || state.timeDisplay < old) { localStorage.setItem('period_best', state.timeDisplay); DOM.start.best.textContent = state.timeDisplay; }
             }
             DOM.result.time.textContent = state.timeDisplay;
-            DOM.result.misses.innerHTML = '';
-            if (state.misses.size === 0) DOM.result.misses.innerHTML = '<li style="color:var(--neon-green)">PERFECT!</li>';
-            else state.misses.forEach(m => { const li = document.createElement('li'); li.textContent = m; DOM.result.misses.appendChild(li); });
+
+            state.lastMisses = [...state.misses].map(n => DATA.findIndex(d => d.n === n)).filter(i => i >= 0);
+            const list = DOM.result.misses;
+            list.innerHTML = '';
+            if (!state.misses.size) {
+                const li = document.createElement('li'); li.className = 'perfect'; li.textContent = 'PERFECT!';
+                list.appendChild(li);
+                DOM.result.review.style.display = 'none';
+            } else {
+                DOM.result.review.style.display = '';
+                [...state.misses].sort((a, b) => a - b).forEach(n => {
+                    const el = byN(n); if (!el) return;
+                    const st = STATS[String(n)] || { miss: 0 };
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="mi-n">${el.n}</span>` +
+                        `<span class="mi-s">${el.s}</span>` +
+                        `<span class="mi-ja">${el.ja}</span>` +
+                        `<span class="mi-c">通算${st.miss}ミス</span>`;
+                    list.appendChild(li);
+                });
+            }
             setTimeout(() => switchScreen('result'), 500);
         }
 
-        function lockInput(duration = 400) {
+        function lockInput(duration) {
             state.inputLocked = true;
-            if (state.inputUnlockTimer) clearTimeout(state.inputUnlockTimer);
-            state.inputUnlockTimer = setTimeout(() => {
-                state.inputLocked = false;
-            }, duration);
+            clearTimeout(state.inputUnlockTimer);
+            state.inputUnlockTimer = setTimeout(() => { state.inputLocked = false; }, duration || 400);
         }
 
         function loop() {
             if (state.playing && state.timerEnabled) {
-                const now = performance.now();
-                const diff = now - state.startTime;
-                const m = Math.floor(diff / 60000); const s = Math.floor((diff % 60000) / 1000); const ms = Math.floor((diff % 1000) / 10);
-                state.timeDisplay = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+                const diff = performance.now() - state.startTime;
+                const m = Math.floor(diff / 60000), s = Math.floor((diff % 60000) / 1000), ms = Math.floor((diff % 1000) / 10);
+                state.timeDisplay = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
                 DOM.game.timer.textContent = state.timeDisplay;
                 requestAnimationFrame(loop);
             }
         }
 
-        // Canvas
-        let cvState = { drawing: false, x: 0, y: 0, timer: null };
-        const ctx = DOM.game.canvas.getContext('2d');
-        let wrk = null;
-
-        function initCanvas() {
+        /* ============================================================
+         * 手書きキャンバス
+         * ========================================================== */
+        const Write = (function () {
             const cv = DOM.game.canvas;
-            const obs = new ResizeObserver((entries) => {
-                const r = entries[0].contentRect; cv.width = r.width; cv.height = r.height;
-                ctx.strokeStyle = '#00ff9d'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-            });
-            obs.observe(cv.parentElement);
-            const start = (e) => { e.preventDefault(); cvState.drawing = true; const r = cv.getBoundingClientRect(); cvState.x = e.clientX - r.left; cvState.y = e.clientY - r.top; clearTimeout(cvState.timer); };
-            const move = (e) => { if (!cvState.drawing) return; e.preventDefault(); const r = cv.getBoundingClientRect(); const x = e.clientX - r.left; const y = e.clientY - r.top; ctx.beginPath(); ctx.moveTo(cvState.x, cvState.y); ctx.lineTo(x, y); ctx.stroke(); cvState.x = x; cvState.y = y; };
-            const end = () => { if (cvState.drawing) { cvState.drawing = false; cvState.timer = setTimeout(recognize, 800); } };
-            cv.addEventListener('pointerdown', start); cv.addEventListener('pointermove', move); cv.addEventListener('pointerup', end); cv.addEventListener('pointerout', end);
-            document.getElementById('btn-clear').addEventListener('click', clearCanvas);
-            initOCR();
+            const ctx = cv.getContext('2d');
+            let strokes = [], cur = null, cssW = 0, cssH = 0, lw = 6;
+            let commitTimer = null, lastRes = null, tessSeq = 0;
+
+            // オフライン評価(480サンプル)で、誤って自動確定してしまう率 0.2% /
+            // 候補提示にまわる率 16% になるよう調整した値
+            const ACCEPT_MAX = 4.5;     // これより悪い一致は自動確定しない
+            const ACCEPT_REL = 0.22;    // 2位との相対差がこれ以上なら自信あり
+            // 前に伸びうる記号（H→He など）は少し長めに待つ
+            const EXTENDABLE = new Set(['H', 'L', 'B', 'C', 'N', 'S', 'A', 'M']);
+
+            function refit() {
+                const wrap = DOM.game.cvWrap;
+                if (!wrap) return;
+                const r = wrap.getBoundingClientRect();
+                if (r.width < 20 || r.height < 20) return;
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);
+                cssW = r.width; cssH = r.height;
+                cv.width = Math.round(cssW * dpr); cv.height = Math.round(cssH * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                lw = Math.max(4, Math.round(cssH * 0.055));
+                redraw();
+            }
+
+            function redraw() {
+                ctx.clearRect(0, 0, cssW, cssH);
+                ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = lw;
+                ctx.strokeStyle = '#00ff9d'; ctx.fillStyle = '#00ff9d';
+                ctx.shadowColor = 'rgba(0,255,157,0.55)'; ctx.shadowBlur = 6;
+                strokes.forEach(st => {
+                    if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0].x, st[0].y, lw / 2, 0, 6.2832); ctx.fill(); return; }
+                    ctx.beginPath(); ctx.moveTo(st[0].x, st[0].y);
+                    for (let i = 1; i < st.length - 1; i++) {
+                        const mx = (st[i].x + st[i + 1].x) / 2, my = (st[i].y + st[i + 1].y) / 2;
+                        ctx.quadraticCurveTo(st[i].x, st[i].y, mx, my);   // 滑らかに
+                    }
+                    ctx.lineTo(st[st.length - 1].x, st[st.length - 1].y);
+                    ctx.stroke();
+                });
+                ctx.shadowBlur = 0;
+                DOM.game.btnUndo.disabled = !strokes.length;
+            }
+
+            function pos(e) {
+                const r = cv.getBoundingClientRect();
+                return { x: e.clientX - r.left, y: e.clientY - r.top };
+            }
+            function down(e) {
+                if (!state.playing) return;
+                e.preventDefault();
+                clearTimeout(commitTimer);
+                try { cv.setPointerCapture(e.pointerId); } catch (err) { }
+                cur = [pos(e)]; strokes.push(cur); redraw();
+                setStatus('...', false);
+            }
+            function move(e) {
+                if (!cur) return;
+                e.preventDefault();
+                const p = pos(e), last = cur[cur.length - 1];
+                if (Math.abs(p.x - last.x) + Math.abs(p.y - last.y) < 1.2) return;
+                cur.push(p); redraw();
+            }
+            function up(e) {
+                if (!cur) return;
+                cur = null;
+                try { cv.releasePointerCapture(e.pointerId); } catch (err) { }
+                evaluate(false);
+                clearTimeout(commitTimer);
+                commitTimer = setTimeout(() => evaluate(true), delayFor(lastRes));
+            }
+            function delayFor(res) {
+                if (!res || !res.cands.length) return 700;
+                const top = res.cands[0].sym;
+                return (top.length === 1 && EXTENDABLE.has(top)) ? 1150 : 620;
+            }
+
+            // 描き終わるたびに候補を出し、確定タイミングで自動送信する
+            function evaluate(commit) {
+                if (!strokes.length) { renderCands(null); return; }
+                const res = Recog.recognize(strokes, cssW, cssH, lw);
+                lastRes = res;
+                if (!res) { renderCands(null); return; }
+                const c = res.cands, best = c[0], second = c[1];
+                const rel = second ? (second.score - best.score) / Math.max(best.score, 0.6) : 9;
+                const confident = best.score < ACCEPT_MAX && rel > ACCEPT_REL;
+
+                renderCands(res, commit && !confident);
+                if (!commit) { setStatus(best.sym + ' ?', false); return; }
+
+                if (confident) {
+                    setStatus(best.sym, false);
+                    handleInput(best.n, 'ocr', best.sym);
+                } else {
+                    setStatus('候補から選んでね', true);
+                    tesseractAssist(res);      // 迷ったときだけ第2の目を使う
+                }
+            }
+
+            function renderCands(res, emphasize) {
+                const row = DOM.game.candRow;
+                row.innerHTML = '';
+                if (!res) return;
+                if (emphasize) {
+                    const lab = document.createElement('span');
+                    lab.className = 'cand-label'; lab.textContent = 'もしかして';
+                    row.appendChild(lab);
+                }
+                res.cands.slice(0, 3).forEach((c, i) => {
+                    const b = document.createElement('button');
+                    b.className = 'cand-chip' + (i === 0 ? ' best' : '');
+                    b.textContent = c.sym;
+                    b.addEventListener('pointerdown', (ev) => { ev.preventDefault(); handleInput(c.n, 'palette'); });
+                    row.appendChild(b);
+                });
+            }
+
+            // Tesseract は「補助票」。候補の並べ替えだけで、自動送信はしない。
+            async function tesseractAssist(res) {
+                const seq = ++tessSeq;
+                const txt = await ocrText(res.img);
+                if (!txt || seq !== tessSeq || !strokes.length) return;
+                const hit = matchSymbol(txt);
+                if (!hit) return;
+                const idx = res.cands.findIndex(c => c.n === hit.n);
+                if (idx > 0) {
+                    const [item] = res.cands.splice(idx, 1);
+                    res.cands.unshift(item);
+                    renderCands(res, true);
+                }
+            }
+
+            function setStatus(t, warn) {
+                DOM.game.ocr.textContent = t;
+                DOM.game.ocr.classList.toggle('warn', !!warn);
+            }
+
+            function clear() {
+                strokes = []; cur = null; lastRes = null; tessSeq++;
+                clearTimeout(commitTimer);
+                redraw();
+                DOM.game.candRow.innerHTML = '';
+                setStatus('ここに元素記号を書く', false);
+            }
+            function undo() {
+                if (!strokes.length) return;
+                strokes.pop(); redraw();
+                clearTimeout(commitTimer);
+                if (strokes.length) evaluate(false); else clear();
+            }
+
+            function init() {
+                cv.addEventListener('pointerdown', down);
+                cv.addEventListener('pointermove', move);
+                cv.addEventListener('pointerup', up);
+                cv.addEventListener('pointercancel', up);
+                DOM.game.btnClear.addEventListener('click', clear);
+                DOM.game.btnUndo.addEventListener('click', undo);
+                if (window.ResizeObserver) new ResizeObserver(refit).observe(DOM.game.cvWrap);
+                window.addEventListener('resize', refit);
+                refit();
+            }
+
+            return { init, clear, undo, refit };
+        })();
+
+        /* ---- Tesseract（補助のみ） ---- */
+        let wrk = null, wrkPending = null;
+        async function initOCR() {
+            if (wrk || wrkPending) return wrkPending;
+            if (typeof Tesseract === 'undefined') return null;
+            wrkPending = (async () => {
+                try {
+                    const w = await Tesseract.createWorker('eng');
+                    await w.setParameters({
+                        tessedit_char_whitelist: 'ABCEFGHIKLMNOPRSabcefghiklmnoprs',
+                        tessedit_pageseg_mode: '8'   // single word
+                    });
+                    wrk = w;
+                } catch (e) { wrk = null; }
+                return wrk;
+            })();
+            return wrkPending;
         }
-        function clearCanvas() { ctx.clearRect(0, 0, DOM.game.canvas.width, DOM.game.canvas.height); DOM.game.ocr.textContent = '...'; }
-        async function initOCR() { if (wrk) return; try { wrk = await Tesseract.createWorker('eng'); await wrk.setParameters({ tessedit_char_whitelist: 'HheLiBeBCNOFNeNaMgAlSiPSClArKCa' }); } catch (e) { } }
-        async function recognize() { if (!wrk) { DOM.game.ocr.textContent = "Init.."; await initOCR(); } DOM.game.ocr.textContent = "Read.."; try { const { data } = await wrk.recognize(DOM.game.canvas); let txt = data.text.trim().replace(/[^a-zA-Z]/g, ''); if (txt.length === 1) txt = txt.toUpperCase(); else if (txt.length >= 2) txt = txt[0].toUpperCase() + txt[1].toLowerCase(); DOM.game.ocr.textContent = txt || "?"; const m = DATA.find(e => e.s === txt); if (m) handleInput(m.n, true); } catch (e) { DOM.game.ocr.textContent = "Err"; } }
+        async function ocrText(canvas) {
+            if (!wrk) await initOCR();
+            if (!wrk) return '';
+            try {
+                const { data } = await wrk.recognize(canvas);
+                return (data.text || '').replace(/[^A-Za-z]/g, '');
+            } catch (e) { return ''; }
+        }
+        function lev(a, b) {
+            const m = a.length, n = b.length, d = [];
+            for (let i = 0; i <= m; i++) d[i] = [i];
+            for (let j = 0; j <= n; j++) d[0][j] = j;
+            for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++)
+                d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+            return d[m][n];
+        }
+        function matchSymbol(raw) {
+            const t = raw.toLowerCase().slice(0, 2);
+            let exact = DATA.find(e => e.s.toLowerCase() === t);
+            if (exact) return exact;
+            let best = null, bd = 9;
+            DATA.forEach(e => { const d = lev(e.s.toLowerCase(), t); if (d < bd) { bd = d; best = e; } });
+            return bd <= 1 ? best : null;
+        }
+
+        /* ---- PC キーボード入力（手書きが苦しいときの逃げ道） ---- */
+        let kbBuf = '', kbTimer = null;
+        function onKeyDown(e) {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            if (state.screen === 'start' && e.key === 'Enter') { startGame(null); return; }
+            if (state.screen === 'result' && e.key === 'Enter') { switchScreen('start'); return; }
+            if (!state.playing) return;
+            if (e.key === 'Escape') { state.playing = false; saveStats(); switchScreen('start'); return; }
+            if (e.key === 'Backspace') { kbBuf = ''; Write.undo(); return; }
+
+            if (state.mode !== 'ion' && /^[a-zA-Z]$/.test(e.key)) {
+                kbBuf = (kbBuf + e.key).slice(-2);
+                clearTimeout(kbTimer);
+                const two = DATA.find(el => el.s.toLowerCase() === kbBuf.toLowerCase());
+                if (two) { kbBuf = ''; handleInput(two.n, 'key'); return; }
+                const one = DATA.find(el => el.s.toLowerCase() === e.key.toLowerCase());
+                if (one) {
+                    const extendable = DATA.some(el => el.s.length === 2 && el.s[0].toLowerCase() === e.key.toLowerCase());
+                    if (!extendable) { kbBuf = ''; handleInput(one.n, 'key'); return; }
+                    kbTimer = setTimeout(() => { kbBuf = ''; handleInput(one.n, 'key'); }, 500);
+                } else {
+                    kbTimer = setTimeout(() => { kbBuf = ''; }, 600);
+                }
+                return;
+            }
+            if (state.input === 'select' && state.mode !== 'ion' && /^[0-9]$/.test(e.key)) {
+                kbBuf = (kbBuf + e.key).slice(-2);
+                clearTimeout(kbTimer);
+                const n = parseInt(kbBuf, 10);
+                if (kbBuf.length === 2 || n > 2) {
+                    const v = kbBuf.length === 2 ? n : parseInt(e.key, 10);
+                    kbBuf = '';
+                    if (v >= 1 && v <= 20) handleInput(v, 'key');
+                } else {
+                    kbTimer = setTimeout(() => { const v = parseInt(kbBuf, 10); kbBuf = ''; if (v >= 1 && v <= 20) handleInput(v, 'key'); }, 450);
+                }
+            }
+        }
 
         init();
     </script>
